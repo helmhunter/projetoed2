@@ -94,6 +94,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
         jButtonVendas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cart_upload-01-512.png"))); // NOI18N
         jButtonVendas.setToolTipText("Realizar venda");
+        jButtonVendas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonVendasActionPerformed(evt);
+            }
+        });
         jPanelInternal.add(jButtonVendas);
         jButtonVendas.setBounds(220, 80, 60, 60);
 
@@ -225,6 +230,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void jMenuItemUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUsuariosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItemUsuariosActionPerformed
+
+    private void jButtonVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVendasActionPerformed
+        Venda ven = new Venda();
+        ven.setVisible(true);
+    }//GEN-LAST:event_jButtonVendasActionPerformed
 
     /**
      * @param args the command line arguments
