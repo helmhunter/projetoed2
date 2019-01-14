@@ -2,11 +2,11 @@ package modelBeans;
 
 public class Medicamento {
 
-    public int getCodigo() {
+    public int getRegistroMS () {
         return registroMS;
     }
 
-    public void setCodigo(int codigo) {
+    public void setRegistroRS (int codigo) {
         this.registroMS = codigo;
     }
 

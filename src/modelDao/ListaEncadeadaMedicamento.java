@@ -123,7 +123,7 @@ public class ListaEncadeadaMedicamento {
     public boolean contem (int codigo) {
         NoMedicamento atual = this.primeira;
         while (atual != null) {
-            if (atual.getElemento().getCodigo()==codigo) {
+            if (atual.getElemento().getRegistroMS()==codigo) {
                 return true;
             }
             atual = atual.getProxima();
@@ -151,7 +151,7 @@ public class ListaEncadeadaMedicamento {
         }
         NoMedicamento atual = this.primeira;
         while (atual != null) {
-            if (atual.getElemento().getCodigo()==codigo) {
+            if (atual.getElemento().getRegistroMS()==codigo) {
                 return atual;
             }
             atual = atual.getProxima();
@@ -159,7 +159,7 @@ public class ListaEncadeadaMedicamento {
         return null;
     }
     
-    public void removeCodigo (int codigo) {
+    public void removeRegistroMS (int codigo) {
         if (buscaCodigo(codigo) == this.primeira) {
             this.removeComeco();
         } else if (buscaCodigo(codigo) == this.ultima) {

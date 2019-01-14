@@ -1,6 +1,5 @@
 package view;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -11,8 +10,7 @@ import modelBeans.ModeloTabela;
 public class ConMedicamento extends javax.swing.JFrame {
 
     ListaEncadeadaMedicamento listaMedicamentos = new ListaEncadeadaMedicamento();
-    int codigoSel;
-    Medicamento mod = new Medicamento();
+    int registroMSSel;
     boolean flag = false;
     
     public ConMedicamento() {
@@ -330,62 +328,66 @@ public class ConMedicamento extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldFabricanteActionPerformed
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
-        if (jTextFieldNome.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Campo do nome vazio.");
-            jTextFieldNome.requestFocus();
-        } else if (jTextFieldFabricante.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Campo de fabricante vazio.");
-            jTextFieldFabricante.requestFocus();
-        } else if (jTextFieldVerificador.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Campo do verificador de receita vazio.");
-            jTextFieldFabricante.requestFocus();
-        } else if (Integer.parseInt(jSpinnerQnt.getValue().toString())<0) {
-            JOptionPane.showMessageDialog(null, "Quantidade menor que zero");
-            jSpinnerQnt.requestFocus();
-        } else if (jTextFieldPreco.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Campo de preço vazio.");
-            jTextFieldPreco.requestFocus();
-        } else {
-            if (flag==true) {
-                Medicamento novo = new Medicamento();
-                novo.setNome(jTextFieldNome.getText().toLowerCase());
-                novo.setFabricante(jTextFieldFabricante.getText());
-                novo.setVerificador(jTextFieldVerificador.getText());
-                novo.setAcao((String) jComboBoxAcao.getSelectedItem());
-                novo.setTipo((String) jComboBoxTipo.getSelectedItem());
-                novo.setQnt((int) jSpinnerQnt.getValue());
-                novo.setCodigo((Integer.parseInt(jTextFieldRegistroMS.getText())));
-                novo.setPreco(Double.parseDouble(jTextFieldPreco.getText()));
-                listaMedicamentos.adiciona(novo);
+        try {
+            if (jTextFieldNome.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Campo do nome vazio.");
+                jTextFieldNome.requestFocus();
+            } else if (jTextFieldFabricante.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Campo de fabricante vazio.");
+                jTextFieldFabricante.requestFocus();
+            } else if (jTextFieldVerificador.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Campo do verificador de receita vazio.");
+                jTextFieldFabricante.requestFocus();
+            } else if (Integer.parseInt(jSpinnerQnt.getValue().toString())<0) {
+                JOptionPane.showMessageDialog(null, "Quantidade menor que zero");
+                jSpinnerQnt.requestFocus();
+            } else if (jTextFieldPreco.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Campo de preço vazio.");
+                jTextFieldPreco.requestFocus();
             } else {
-                listaMedicamentos.buscaCodigo(codigoSel).getElemento().setCodigo(Integer.parseInt(jTextFieldRegistroMS.getText()));
-                listaMedicamentos.buscaCodigo(codigoSel).getElemento().setNome(jTextFieldNome.getText().toLowerCase());
-                listaMedicamentos.buscaCodigo(codigoSel).getElemento().setFabricante(jTextFieldFabricante.getText());
-                listaMedicamentos.buscaCodigo(codigoSel).getElemento().setVerificador(jTextFieldVerificador.getText());
-                listaMedicamentos.buscaCodigo(codigoSel).getElemento().setAcao((String) jComboBoxAcao.getSelectedItem());
-                listaMedicamentos.buscaCodigo(codigoSel).getElemento().setTipo((String) jComboBoxTipo.getSelectedItem());
-                listaMedicamentos.buscaCodigo(codigoSel).getElemento().setQnt((int) jSpinnerQnt.getValue());
-                listaMedicamentos.buscaCodigo(codigoSel).getElemento().setPreco(Double.parseDouble(jTextFieldPreco.getText()));
+                if (flag==true) {
+                    Medicamento novo = new Medicamento();
+                    novo.setNome(jTextFieldNome.getText().toLowerCase());
+                    novo.setFabricante(jTextFieldFabricante.getText().toLowerCase());
+                    novo.setVerificador(jTextFieldVerificador.getText().toLowerCase());
+                    novo.setAcao((String) jComboBoxAcao.getSelectedItem());
+                    novo.setTipo((String) jComboBoxTipo.getSelectedItem());
+                    novo.setQnt((int) jSpinnerQnt.getValue());
+                    novo.setRegistroRS((Integer.parseInt(jTextFieldRegistroMS.getText())));
+                    novo.setPreco(Double.parseDouble(jTextFieldPreco.getText()));
+                    listaMedicamentos.adiciona(novo);
+                } else {
+                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setRegistroRS(Integer.parseInt(jTextFieldRegistroMS.getText()));
+                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setNome(jTextFieldNome.getText().toLowerCase());
+                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setFabricante(jTextFieldFabricante.getText());
+                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setVerificador(jTextFieldVerificador.getText());
+                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setAcao((String) jComboBoxAcao.getSelectedItem());
+                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setTipo((String) jComboBoxTipo.getSelectedItem());
+                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setQnt((int) jSpinnerQnt.getValue());
+                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setPreco(Double.parseDouble(jTextFieldPreco.getText()));
+                }
+                jTextFieldRegistroMS.setText("");
+                jTextFieldNome.setText("");
+                jTextFieldFabricante.setText("");
+                jTextFieldVerificador.setText("");
+                jSpinnerQnt.setValue(0);
+                jTextFieldPreco.setText("");
+                jTextFieldPreco.setEnabled(false);
+                jTextFieldNome.setEnabled(false);
+                jTextFieldFabricante.setEnabled(false);
+                jTextFieldVerificador.setEnabled(false);
+                jComboBoxAcao.setEnabled(false);
+                jComboBoxTipo.setEnabled(false);
+                jSpinnerQnt.setEnabled(false);
+                jButtonSalvar.setEnabled(false);
+                jButtonNovo.setEnabled(true);
+                jButtonCancelar.setEnabled(false);
+                preencherTabela();
+                jButtonPesquisar.setEnabled(true);
+                jTextFieldPesquisar.setEnabled(true);
             }
-            jTextFieldRegistroMS.setText("");
-            jTextFieldNome.setText("");
-            jTextFieldFabricante.setText("");
-            jTextFieldVerificador.setText("");
-            jSpinnerQnt.setValue(0);
-            jTextFieldPreco.setText("");
-            jTextFieldPreco.setEnabled(false);
-            jTextFieldNome.setEnabled(false);
-            jTextFieldFabricante.setEnabled(false);
-            jTextFieldVerificador.setEnabled(false);
-            jComboBoxAcao.setEnabled(false);
-            jComboBoxTipo.setEnabled(false);
-            jSpinnerQnt.setEnabled(false);
-            jButtonSalvar.setEnabled(false);
-            jButtonNovo.setEnabled(true);
-            jButtonCancelar.setEnabled(false);
-            preencherTabela();
-            jButtonPesquisar.setEnabled(true);
-            jTextFieldPesquisar.setEnabled(true);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Entrada(s) inválidas.");
         }
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
@@ -411,6 +413,7 @@ public class ConMedicamento extends javax.swing.JFrame {
         jButtonExcluir.setEnabled(false);
         jTextFieldPesquisar.setEnabled(false);
         jButtonPesquisar.setEnabled(false);
+        jButtonNovo.setEnabled(false);
     }//GEN-LAST:event_jButtonNovoActionPerformed
 
     private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
@@ -463,7 +466,7 @@ public class ConMedicamento extends javax.swing.JFrame {
         int resposta = 0;
         resposta = JOptionPane.showConfirmDialog(rootPane,"Confirmar exclusão?");
         if (resposta == JOptionPane.YES_OPTION) {
-            listaMedicamentos.removeCodigo(codigoSel);
+            listaMedicamentos.removeRegistroMS(registroMSSel);
             jTextFieldRegistroMS.setText("");
             jTextFieldNome.setText("");
             jTextFieldFabricante.setText("");
@@ -485,13 +488,13 @@ public class ConMedicamento extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonExcluirActionPerformed
 
     private void jTableMedicamentosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMedicamentosMouseClicked
-        codigoSel = (int) jTableMedicamentos.getValueAt(jTableMedicamentos.getSelectedRow(), 0);
-        Medicamento model = listaMedicamentos.buscaCodigo(codigoSel).getElemento();
+        registroMSSel = (int) jTableMedicamentos.getValueAt(jTableMedicamentos.getSelectedRow(), 0);
+        Medicamento model = listaMedicamentos.buscaCodigo(registroMSSel).getElemento();
         if (model ==  null) {
             JOptionPane.showMessageDialog(rootPane, "Erro ao selecionar");
         } else {
             jTextFieldNome.setText(model.getNome());
-            jTextFieldRegistroMS.setText(String.valueOf(model.getCodigo()));
+            jTextFieldRegistroMS.setText(String.valueOf(model.getRegistroMS()));
             jTextFieldFabricante.setText(model.getFabricante());
             jTextFieldVerificador.setText(model.getVerificador());
             jComboBoxAcao.setSelectedItem(model.getAcao());
@@ -504,6 +507,7 @@ public class ConMedicamento extends javax.swing.JFrame {
     }//GEN-LAST:event_jTableMedicamentosMouseClicked
 
     private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSairActionPerformed
+        listaParaArquivo();
         dispose();
     }//GEN-LAST:event_jButtonSairActionPerformed
 
@@ -519,16 +523,13 @@ public class ConMedicamento extends javax.swing.JFrame {
         try {
             do {
                 if (listaMedicamentos.pega(i).getNome().contains(jTextFieldPesquisar.getText().toLowerCase())) {
-                    dados.add(new Object[]{listaMedicamentos.pega(i).getCodigo(),listaMedicamentos.pega(i).getNome(),listaMedicamentos.pega(i).getFabricante(),listaMedicamentos.pega(i).getVerificador(),listaMedicamentos.pega(i).getAcao(),listaMedicamentos.pega(i).getTipo(),listaMedicamentos.pega(i).getQnt(),listaMedicamentos.pega(i).getPreco()});
+                    dados.add(new Object[]{listaMedicamentos.pega(i).getRegistroMS(),listaMedicamentos.pega(i).getNome(),listaMedicamentos.pega(i).getFabricante(),listaMedicamentos.pega(i).getVerificador(),listaMedicamentos.pega(i).getAcao(),listaMedicamentos.pega(i).getTipo(),listaMedicamentos.pega(i).getQnt(),listaMedicamentos.pega(i).getPreco()});
                 }
                 i++;
             } while (listaMedicamentos.pega(i)!=null);
         } catch (IllegalArgumentException ex) {
         }
-        
         ModeloTabela modelo = new ModeloTabela(dados, colunas);
-        
-        
         jTableMedicamentos.setModel(modelo);
         jTableMedicamentos.getColumnModel().getColumn(0).setPreferredWidth(52);
         jTableMedicamentos.getColumnModel().getColumn(0).setResizable(false);
