@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import modelDao.ListaEncadeadaMedicamento;
-import modelConection.ConexaoBD;
-import modelDao.DaoMedicamento;
 import modelBeans.Medicamento;
 import modelBeans.ModeloTabela;
 
@@ -15,13 +13,11 @@ public class CadMedicamento extends javax.swing.JFrame {
     ListaEncadeadaMedicamento listaMedicamentos = new ListaEncadeadaMedicamento();
     int codigoSel;
     Medicamento mod = new Medicamento();
-    DaoMedicamento control = new DaoMedicamento();
-    ConexaoBD conex = new ConexaoBD();
     boolean flag = false;
     
     public CadMedicamento() {
-        initComponents();
-        BDparaLista();
+        //initComponents();
+        //BDparaLista();
         preencherTabela(listaMedicamentos);
     }
 
@@ -500,9 +496,6 @@ public class CadMedicamento extends javax.swing.JFrame {
     }//GEN-LAST:event_jTableMedicamentosMouseClicked
 
     private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSairActionPerformed
-        control.excluirTabela();
-        control.criarTabela();
-        listaParaBD();
         dispose();
     }//GEN-LAST:event_jButtonSairActionPerformed
 
@@ -523,7 +516,7 @@ public class CadMedicamento extends javax.swing.JFrame {
                 if (jTextFieldPesquisar.getText().equals("")) {
                     dados.add(new Object[]{listaMedicamentos.pega(i).getCodigo(),listaMedicamentos.pega(i).getNome(),listaMedicamentos.pega(i).getFabricante(),listaMedicamentos.pega(i).getVerificador(),listaMedicamentos.pega(i).getAcao(),listaMedicamentos.pega(i).getTipo(),listaMedicamentos.pega(i).getQnt(),listaMedicamentos.pega(i).getPreco()});
                 }
-                else if (listaMedicamentos.pega(i).getNome().equals(jTextFieldPesquisar.getText())) {
+                else if (listaMedicamentos.pega(i).getNome().contains(jTextFieldPesquisar.getText().toLowerCase())) {
                     dados.add(new Object[]{listaMedicamentos.pega(i).getCodigo(),listaMedicamentos.pega(i).getNome(),listaMedicamentos.pega(i).getFabricante(),listaMedicamentos.pega(i).getVerificador(),listaMedicamentos.pega(i).getAcao(),listaMedicamentos.pega(i).getTipo(),listaMedicamentos.pega(i).getQnt(),listaMedicamentos.pega(i).getPreco()});
                 }
                 i++;
@@ -555,17 +548,18 @@ public class CadMedicamento extends javax.swing.JFrame {
         jTableMedicamentos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
     
-    
-    public void listaParaBD () {
+   //mudar o metodo para salvar no arquivo 
+    /*public void listaParaBD () {
         int i = 0;
         while (listaMedicamentos.posicaoOcupada(i)) {
             control.salvar(listaMedicamentos.pega(i));
             i++;
         }
         
-    }
+    }*/
     
-    public void BDparaLista () {
+    //mudar o metodo para puxar do arquivo pra lista
+    /*public void arquivoParaLista () {
         conex.conectar();
         try {
             conex.executasql("select *from medicamentos order by nome");
@@ -586,7 +580,7 @@ public class CadMedicamento extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, "Erro ao preencher dados: "+ex.getMessage());
         }
         conex.desconectar();
-    }
+    }*/
     
         public static void main(String args[]) {
 

@@ -1,12 +1,12 @@
 package modelDao;
 
-import modelBeans.CelulaMedicamento;
+import modelBeans.NoMedicamento;
 import modelBeans.Medicamento;
 
 public class ListaEncadeadaMedicamento {
 
-    private CelulaMedicamento primeira;
-    private CelulaMedicamento ultima;
+    private NoMedicamento primeira;
+    private NoMedicamento ultima;
     private int total;
 
     public ListaEncadeadaMedicamento() {
@@ -15,11 +15,11 @@ public class ListaEncadeadaMedicamento {
     
     public void adicionaComeco (Medicamento elemento) {
         if (this.total == 0) {
-            CelulaMedicamento nova = new CelulaMedicamento(elemento);
+            NoMedicamento nova = new NoMedicamento(elemento);
             this.primeira = nova;
             this.ultima = nova;
         } else {
-            CelulaMedicamento nova =  new CelulaMedicamento(this.primeira, elemento);
+            NoMedicamento nova =  new NoMedicamento(this.primeira, elemento);
             this.primeira.setAnterior(nova);
             this.primeira = nova;
         }
@@ -30,7 +30,7 @@ public class ListaEncadeadaMedicamento {
         if (this.total==0) {
             this.adicionaComeco(elemento);
         } else {
-            CelulaMedicamento nova = new CelulaMedicamento(elemento);
+            NoMedicamento nova = new NoMedicamento(elemento);
             this.ultima.setProxima(nova);
             nova.setAnterior(this.ultima);
             this.ultima = nova;
@@ -42,11 +42,11 @@ public class ListaEncadeadaMedicamento {
         return posicao >= 0 && posicao < this.total;
     }
     
-    public CelulaMedicamento pegaCelula (int posicao) {
+    public NoMedicamento pegaCelula (int posicao) {
         if (!this.posicaoOcupada(posicao)) {
             throw new IllegalArgumentException("Posição não existe.");
         }
-        CelulaMedicamento atual = primeira;
+        NoMedicamento atual = primeira;
         for (int i = 0; i < posicao; i++) {
             atual = atual.getProxima();
         }
@@ -59,9 +59,9 @@ public class ListaEncadeadaMedicamento {
         } else if (posicao == this.total){
             this.adiciona(elemento);
         } else {
-            CelulaMedicamento anterior = this.pegaCelula(posicao-1);
-            CelulaMedicamento proxima = anterior.getProxima();
-            CelulaMedicamento nova = new CelulaMedicamento(anterior.getProxima(), elemento);
+            NoMedicamento anterior = this.pegaCelula(posicao-1);
+            NoMedicamento proxima = anterior.getProxima();
+            NoMedicamento nova = new NoMedicamento(anterior.getProxima(), elemento);
             nova.setAnterior(anterior);
             anterior.setProxima(nova);
             proxima.setAnterior(nova);
@@ -87,7 +87,7 @@ public class ListaEncadeadaMedicamento {
         if (this.total == 1) {
             this.removeComeco();
         } else {
-            CelulaMedicamento penultima = this.ultima.getAnterior();
+            NoMedicamento penultima = this.ultima.getAnterior();
             penultima.setProxima(null);
             this.ultima = penultima;
             this.total--;
@@ -103,9 +103,9 @@ public class ListaEncadeadaMedicamento {
         } else if (posicao == this.total - 1) {
             this.removeFim();
         } else  {
-            CelulaMedicamento anterior = this.pegaCelula(posicao - 1);
-            CelulaMedicamento atual = anterior.getProxima();
-            CelulaMedicamento proxima =  atual.getProxima();
+            NoMedicamento anterior = this.pegaCelula(posicao - 1);
+            NoMedicamento atual = anterior.getProxima();
+            NoMedicamento proxima =  atual.getProxima();
             anterior.setProxima(proxima);
             proxima.setAnterior(anterior);
             this.total--;
@@ -121,7 +121,7 @@ public class ListaEncadeadaMedicamento {
     }
     
     public boolean contem (int codigo) {
-        CelulaMedicamento atual = this.primeira;
+        NoMedicamento atual = this.primeira;
         while (atual != null) {
             if (atual.getElemento().getCodigo()==codigo) {
                 return true;
@@ -131,11 +131,11 @@ public class ListaEncadeadaMedicamento {
         return false;
     }
     
-    public CelulaMedicamento buscaNome (String nome) {
+    public NoMedicamento buscaNome (String nome) {
         if (this.total == 0) {
             return null;
         }
-        CelulaMedicamento atual = this.primeira;
+        NoMedicamento atual = this.primeira;
         while (atual != null) {
             if (atual.getElemento().getNome().equals(nome)) {
                 return atual;
@@ -145,11 +145,11 @@ public class ListaEncadeadaMedicamento {
         return null;
     }
     
-    public CelulaMedicamento buscaCodigo (int codigo) {
+    public NoMedicamento buscaCodigo (int codigo) {
         if (this.total == 0) {
             return null;
         }
-        CelulaMedicamento atual = this.primeira;
+        NoMedicamento atual = this.primeira;
         while (atual != null) {
             if (atual.getElemento().getCodigo()==codigo) {
                 return atual;
@@ -165,9 +165,9 @@ public class ListaEncadeadaMedicamento {
         } else if (buscaCodigo(codigo) == this.ultima) {
             this.removeFim();
         } else {
-            CelulaMedicamento anterior = this.buscaCodigo(codigo);
-            CelulaMedicamento atual = anterior.getProxima();
-            CelulaMedicamento proxima =  atual.getProxima();
+            NoMedicamento anterior = this.buscaCodigo(codigo);
+            NoMedicamento atual = anterior.getProxima();
+            NoMedicamento proxima =  atual.getProxima();
             anterior.setProxima(proxima);
             proxima.setAnterior(anterior);
             this.total--;

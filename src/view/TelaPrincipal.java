@@ -5,7 +5,6 @@
  */
 package view;
 
-import modelConection.ConexaoBD;
 
 /**
  *
@@ -13,13 +12,11 @@ import modelConection.ConexaoBD;
  */
 public class TelaPrincipal extends javax.swing.JFrame {
     
-    ConexaoBD conecta = new ConexaoBD();
     static String tipo;
     
     public TelaPrincipal(String tipo) {
         this.tipo=tipo;
         initComponents();
-        conecta.conectar();
     }
 
     /**

@@ -4,11 +4,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
-import modelBeans.CelulaCliente;
+import modelBeans.NoCliente;
 import modelBeans.Cliente;
 import modelBeans.ModeloTabela;
-import modelConection.ConexaoBD;
-import modelDao.DaoCliente;
 import modelDao.ListaEncadeadaCliente;
 
 public class CadCliente extends javax.swing.JFrame {
@@ -16,12 +14,10 @@ public class CadCliente extends javax.swing.JFrame {
     boolean flag = false;
     ListaEncadeadaCliente listaClientes = new ListaEncadeadaCliente();
     long cpfSel;
-    DaoCliente control = new DaoCliente();
-    ConexaoBD conex = new ConexaoBD();
     
     public CadCliente() {
         initComponents();
-        BDparaLista();
+        //BDparaLista();
         preencherTabela(listaClientes);
     }
 
@@ -272,9 +268,6 @@ public class CadCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldCPFActionPerformed
 
     private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSairActionPerformed
-        control.excluirTabela();
-        control.criarTabela();
-        listaParaBD();
         dispose();
     }//GEN-LAST:event_jButtonSairActionPerformed
 
@@ -467,16 +460,18 @@ public class CadCliente extends javax.swing.JFrame {
         jTableClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
     
-    public void listaParaBD () {
+    //mudar para salvar em arquivo
+    /*public void listaParaBD () {
         int i = 0;
         while (listaClientes.posicaoOcupada(i)) {
             control.salvar(listaClientes.pega(i));
             i++;
         }
         
-    }
+    }*/
     
-    public void BDparaLista () {
+    //mudar do arquivo para a lista
+    /*public void BDparaLista () {
         conex.conectar();
         try {
             conex.executasql("select *from clientes order by nome");
@@ -496,7 +491,7 @@ public class CadCliente extends javax.swing.JFrame {
             //JOptionPane.showMessageDialog(rootPane, "Erro ao preencher dados: "+ex.getMessage());
         }
         conex.desconectar();
-    }
+    }*/
     
     public static void main(String args[]) {
         try {

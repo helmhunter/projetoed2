@@ -1,12 +1,12 @@
 package modelDao;
 
-import modelBeans.CelulaCliente;
+import modelBeans.NoCliente;
 import modelBeans.Cliente;
 
 public class ListaEncadeadaCliente {
 
-    private CelulaCliente primeira;
-    private CelulaCliente ultima;
+    private NoCliente primeira;
+    private NoCliente ultima;
     private int total;
 
     public ListaEncadeadaCliente() {
@@ -15,11 +15,11 @@ public class ListaEncadeadaCliente {
     
     public void adicionaComeco (Cliente elemento) {
         if (this.total == 0) {
-            CelulaCliente nova = new CelulaCliente(elemento);
+            NoCliente nova = new NoCliente(elemento);
             this.primeira = nova;
             this.ultima = nova;
         } else {
-            CelulaCliente nova =  new CelulaCliente(this.primeira, elemento);
+            NoCliente nova =  new NoCliente(this.primeira, elemento);
             this.primeira.setAnterior(nova);
             this.primeira = nova;
         }
@@ -30,7 +30,7 @@ public class ListaEncadeadaCliente {
         if (this.total==0) {
             this.adicionaComeco(elemento);
         } else {
-            CelulaCliente nova = new CelulaCliente(elemento);
+            NoCliente nova = new NoCliente(elemento);
             this.ultima.setProxima(nova);
             nova.setAnterior(this.ultima);
             this.ultima = nova;
@@ -42,11 +42,11 @@ public class ListaEncadeadaCliente {
         return posicao >= 0 && posicao < this.total;
     }
     
-    public CelulaCliente pegaCelula (int posicao) {
+    public NoCliente pegaCelula (int posicao) {
         if (!this.posicaoOcupada(posicao)) {
             throw new IllegalArgumentException("Posição não existe.");
         }
-        CelulaCliente atual = primeira;
+        NoCliente atual = primeira;
         for (int i = 0; i < posicao; i++) {
             atual = atual.getProxima();
         }
@@ -59,9 +59,9 @@ public class ListaEncadeadaCliente {
         } else if (posicao == this.total){
             this.adiciona(elemento);
         } else {
-            CelulaCliente anterior = this.pegaCelula(posicao-1);
-            CelulaCliente proxima = anterior.getProxima();
-            CelulaCliente nova = new CelulaCliente(anterior.getProxima(), elemento);
+            NoCliente anterior = this.pegaCelula(posicao-1);
+            NoCliente proxima = anterior.getProxima();
+            NoCliente nova = new NoCliente(anterior.getProxima(), elemento);
             nova.setAnterior(anterior);
             anterior.setProxima(nova);
             proxima.setAnterior(nova);
@@ -87,7 +87,7 @@ public class ListaEncadeadaCliente {
         if (this.total == 1) {
             this.removeComeco();
         } else {
-            CelulaCliente penultima = this.ultima.getAnterior();
+            NoCliente penultima = this.ultima.getAnterior();
             penultima.setProxima(null);
             this.ultima = penultima;
             this.total--;
@@ -103,9 +103,9 @@ public class ListaEncadeadaCliente {
         } else if (posicao == this.total - 1) {
             this.removeFim();
         } else  {
-            CelulaCliente anterior = this.pegaCelula(posicao - 1);
-            CelulaCliente atual = anterior.getProxima();
-            CelulaCliente proxima =  atual.getProxima();
+            NoCliente anterior = this.pegaCelula(posicao - 1);
+            NoCliente atual = anterior.getProxima();
+            NoCliente proxima =  atual.getProxima();
             anterior.setProxima(proxima);
             proxima.setAnterior(anterior);
             this.total--;
@@ -121,7 +121,7 @@ public class ListaEncadeadaCliente {
     }
     
     public boolean contem (int cpf) {
-        CelulaCliente atual = this.primeira;
+        NoCliente atual = this.primeira;
         while (atual != null) {
             if (atual.getElemento().getCpf()==cpf) {
                 return true;
@@ -131,11 +131,11 @@ public class ListaEncadeadaCliente {
         return false;
     }
     
-    public CelulaCliente buscaNome (String nome) {
+    public NoCliente buscaNome (String nome) {
         if (this.total == 0) {
             return null;
         }
-        CelulaCliente atual = this.primeira;
+        NoCliente atual = this.primeira;
         while (atual != null) {
             if (atual.getElemento().getNome().equals(nome)) {
                 return atual;
@@ -145,11 +145,11 @@ public class ListaEncadeadaCliente {
         return null;
     }
     
-    public CelulaCliente buscaCpf (long cpf) {
+    public NoCliente buscaCpf (long cpf) {
         if (this.total == 0) {
             return null;
         }
-        CelulaCliente atual = this.primeira;
+        NoCliente atual = this.primeira;
         while (atual != null) {
             if (atual.getElemento().getCpf()==cpf) {
                 return atual;
@@ -165,9 +165,9 @@ public class ListaEncadeadaCliente {
         } else if (buscaCpf(cpf) == this.ultima) {
             this.removeFim();
         } else {
-            CelulaCliente anterior = this.buscaCpf(cpf);
-            CelulaCliente atual = anterior.getProxima();
-            CelulaCliente proxima =  atual.getProxima();
+            NoCliente anterior = this.buscaCpf(cpf);
+            NoCliente atual = anterior.getProxima();
+            NoCliente proxima =  atual.getProxima();
             anterior.setProxima(proxima);
             proxima.setAnterior(anterior);
             this.total--;

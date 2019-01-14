@@ -1,33 +1,33 @@
 package modelBeans;
 
-public class CelulaCliente {
+public class NoCliente {
 
-    private CelulaCliente proxima;
-    private CelulaCliente anterior;
+    private NoCliente proxima;
+    private NoCliente anterior;
     private Cliente elemento;
     
-    public CelulaCliente (CelulaCliente proxima, Cliente elemento) {
+    public NoCliente (NoCliente proxima, Cliente elemento) {
         this.proxima = proxima;
         this.elemento = elemento;
     }
     
-    public CelulaCliente (Cliente elemento) {
+    public NoCliente (Cliente elemento) {
         this.elemento = elemento;
     }
     
-    public void setProxima (CelulaCliente proxima) {
+    public void setProxima (NoCliente proxima) {
         this.proxima = proxima;
     }
     
-    public CelulaCliente getProxima () {
+    public NoCliente getProxima () {
         return proxima;
     }
     
-    public void setAnterior (CelulaCliente anterior) {
+    public void setAnterior (NoCliente anterior) {
         this.anterior =  anterior;
     }
     
-    public CelulaCliente getAnterior () {
+    public NoCliente getAnterior () {
         return anterior;
     }
     

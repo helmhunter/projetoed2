@@ -6,19 +6,15 @@ import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import modelBeans.ModeloTabela;
 import modelBeans.Usuario;
-import modelConection.ConexaoBD;
-import modelDao.DaoUsuario;
 
 public class CadUsuario extends javax.swing.JFrame {
 
     Usuario aux = new Usuario();
-    DaoUsuario control = new DaoUsuario();
     boolean flag = false;
-    ConexaoBD conex = new ConexaoBD();
     
     public CadUsuario() {
         initComponents();
-        preencherTabela("select *from usuarios where usuario like'%"+jTextFieldBuscar.getText()+"%'");
+        //preencherTabela("select *from usuarios where usuario like'%"+jTextFieldBuscar.getText()+"%'");
     }
 
     @SuppressWarnings("unchecked")
@@ -256,9 +252,9 @@ public class CadUsuario extends javax.swing.JFrame {
                 aux.setUsuario(jTextFieldUsuario.getText());
                 aux.setSenha(jPasswordFieldSenha.getText());
                 aux.setTipo((String) jComboBoxTipo.getSelectedItem());
-                control.salvar(aux);
+                //control.salvar(aux);
             } else {
-                control.alterar(aux);
+                //control.alterar(aux);
             }
             jTextFieldUsuario.setText("");
             jPasswordFieldSenha.setText("");
@@ -272,15 +268,15 @@ public class CadUsuario extends javax.swing.JFrame {
             jButtonCancelar.setEnabled(false);
             jButtonAlterar.setEnabled(false);
         }
-        preencherTabela("select *from usuarios where usuario like'%"+jTextFieldBuscar.getText()+"%'");
+        //preencherTabela("select *from usuarios where usuario like'%"+jTextFieldBuscar.getText()+"%'");
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
     private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
         int resposta = 0;
         resposta = JOptionPane.showConfirmDialog(rootPane,"Confirmar exclusão?");
         if (resposta == JOptionPane.YES_OPTION) {
-            control.excluir(aux);
-            preencherTabela("select *from usuarios where usuario like'%"+jTextFieldBuscar.getText()+"%'");
+            //control.excluir(aux);
+            //preencherTabela("select *from usuarios where usuario like'%"+jTextFieldBuscar.getText()+"%'");
             jTextFieldUsuario.setText("");
             jPasswordFieldSenha.setText("");
             jPasswordFieldCSenha.setText("");
@@ -351,7 +347,8 @@ public class CadUsuario extends javax.swing.JFrame {
         jButtonSalvar.setEnabled(true);
     }//GEN-LAST:event_jButtonAlterarActionPerformed
 
-    public void preencherTabela (String sql) {
+    //mudar para o preencher semelhante ao cadastro de medicamentos
+    /*public void preencherTabela (String sql) {
         ArrayList dados = new ArrayList();
         String[] colunas = new String[] {"ID","Usuário","Senha","Tipo"};
         conex.conectar();
@@ -383,7 +380,7 @@ public class CadUsuario extends javax.swing.JFrame {
         jTableUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
         conex.desconectar();
-    }
+    }*/
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
