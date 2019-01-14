@@ -3,11 +3,11 @@ package modelBeans;
 public class Medicamento {
 
     public int getCodigo() {
-        return codigo;
+        return registroMS;
     }
 
     public void setCodigo(int codigo) {
-        this.codigo = codigo;
+        this.registroMS = codigo;
     }
 
     public String getNome() {
@@ -58,7 +58,7 @@ public class Medicamento {
         this.qnt = qnt;
     }
 
-    private int codigo;
+    private int registroMS;
     private String nome;
     private String fabricante;
     private String verificador;

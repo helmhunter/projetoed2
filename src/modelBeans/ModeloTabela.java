@@ -34,7 +34,14 @@ public class ModeloTabela extends AbstractTableModel {
     }
     
     public int getRowCount () {
-        return linhas.size();
+      if (this.linhas == null)
+      {
+         return 0;
+      } 
+      else
+      {
+         return this.linhas.size();
+      }
     }
     
     public String getColumnName (int numCol) {

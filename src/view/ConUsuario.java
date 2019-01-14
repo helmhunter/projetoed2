@@ -7,12 +7,12 @@ import javax.swing.ListSelectionModel;
 import modelBeans.ModeloTabela;
 import modelBeans.Usuario;
 
-public class CadUsuario extends javax.swing.JFrame {
+public class ConUsuario extends javax.swing.JFrame {
 
     Usuario aux = new Usuario();
     boolean flag = false;
     
-    public CadUsuario() {
+    public ConUsuario() {
         initComponents();
         //preencherTabela("select *from usuarios where usuario like'%"+jTextFieldBuscar.getText()+"%'");
     }
@@ -396,20 +396,21 @@ public class CadUsuario extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ConUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadUsuario().setVisible(true);
+                new ConUsuario().setVisible(true);
             }
         });
     }

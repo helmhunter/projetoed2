@@ -42,18 +42,18 @@ public class Cliente {
         this.idade = idade;
     }
 
-    private String[] compras; 
+    private int[] compras; 
     private String nome;
     private long cpf;
     private String endereco;
     private long telefone;
     private int idade;
 
-    public String[] getCompras() {
+    public int[] getCompras() {
         return compras;
     }
 
-    public void setCompras(String[] compras) {
+    public void setCompras(int[] compras) {
         this.compras = compras;
     }
     

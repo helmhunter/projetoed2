@@ -63,7 +63,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jPanelInternal.setLayout(null);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel3.setText("Cadastro");
+        jLabel3.setText("Consulta:");
         jPanelInternal.add(jLabel3);
         jLabel3.setBounds(10, 50, 80, 17);
 
@@ -126,7 +126,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         getContentPane().add(jLabelFundoPrincipal);
         jLabelFundoPrincipal.setBounds(0, 0, 870, 510);
 
-        jMenuCadastro.setText("Cadastro");
+        jMenuCadastro.setText("Consulta");
 
         jMenuItemCadMedicamentos.setText("Medicamentos");
         jMenuItemCadMedicamentos.addActionListener(new java.awt.event.ActionListener() {
@@ -199,12 +199,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemTelaBemVindoActionPerformed
 
     private void jMenuItemCadMedicamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemCadMedicamentosActionPerformed
-        CadMedicamento cadMed = new CadMedicamento();
+        ConMedicamento cadMed = new ConMedicamento();
         cadMed.setVisible(true);
     }//GEN-LAST:event_jMenuItemCadMedicamentosActionPerformed
 
     private void jButtonCadMedicamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCadMedicamentosActionPerformed
-        CadMedicamento cadMed = new CadMedicamento();
+        ConMedicamento cadMed = new ConMedicamento();
         cadMed.setVisible(true);
     }//GEN-LAST:event_jButtonCadMedicamentosActionPerformed
 
@@ -213,12 +213,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuSairMouseClicked
 
     private void jButtonConClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConClientesActionPerformed
-        CadCliente cadCli = new CadCliente();
+        ConCliente cadCli = new ConCliente();
         cadCli.setVisible(true);
     }//GEN-LAST:event_jButtonConClientesActionPerformed
 
     private void jMenuItemConClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemConClientesActionPerformed
-        CadCliente cadCli = new CadCliente();
+        ConCliente cadCli = new ConCliente();
         cadCli.setVisible(true);
     }//GEN-LAST:event_jMenuItemConClientesActionPerformed
 
