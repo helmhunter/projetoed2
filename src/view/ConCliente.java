@@ -1,10 +1,8 @@
 package view;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
-import modelBeans.NoCliente;
 import modelBeans.Cliente;
 import modelBeans.ModeloTabela;
 import modelDao.ListaEncadeadaCliente;
@@ -15,10 +13,11 @@ public class ConCliente extends javax.swing.JFrame {
     ListaEncadeadaCliente listaClientes = new ListaEncadeadaCliente();
     long cpfSel;
     
+    
     public ConCliente() {
         initComponents();
-        //BDparaLista();
-        preencherTabela(listaClientes);
+        arquivoParaLista();
+        preencherTabela();
     }
 
     @SuppressWarnings("unchecked")
@@ -268,6 +267,7 @@ public class ConCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextFieldCPFActionPerformed
 
     private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSairActionPerformed
+        listaParaArquivo();
         dispose();
     }//GEN-LAST:event_jButtonSairActionPerformed
 
@@ -309,53 +309,57 @@ public class ConCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonNovoActionPerformed
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
-        if (jTextFieldNome.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Campo do nome vazio.");
-            jTextFieldNome.requestFocus();
-        } else if (jTextFieldCPF.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Campo de fabricante vazio.");
-            jTextFieldCPF.requestFocus();
-        } else if (jTextFieldEndereco.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Campo do verificador de receita vazio.");
-            jTextFieldCPF.requestFocus();
-        } else if (Integer.parseInt(jSpinnerIdade.getValue().toString())<0) {
-            JOptionPane.showMessageDialog(null, "Quantidade menor que zero");
-            jSpinnerIdade.requestFocus();
-        } else if (jTextFieldTelefone.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Campo do telefone vazio.");
-            jTextFieldTelefone.requestFocus();
-        } else {
-            if (flag==true) {
-                Cliente novo = new Cliente();
-                novo.setNome(jTextFieldNome.getText());
-                novo.setCpf((Long.parseLong(jTextFieldCPF.getText())));
-                novo.setEndereco(jTextFieldEndereco.getText());
-                novo.setTelefone(Long.parseLong(jTextFieldTelefone.getText()));
-                novo.setIdade((int) jSpinnerIdade.getValue());
-                listaClientes.adiciona(novo);
+        try {
+            if (jTextFieldNome.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Campo do nome vazio.");
+                jTextFieldNome.requestFocus();
+            } else if (jTextFieldCPF.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Campo de fabricante vazio.");
+                jTextFieldCPF.requestFocus();
+            } else if (jTextFieldEndereco.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Campo do verificador de receita vazio.");
+                jTextFieldCPF.requestFocus();
+            } else if (Integer.parseInt(jSpinnerIdade.getValue().toString())<0) {
+                JOptionPane.showMessageDialog(null, "Quantidade menor que zero");
+                jSpinnerIdade.requestFocus();
+            } else if (jTextFieldTelefone.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Campo do telefone vazio.");
+                jTextFieldTelefone.requestFocus();
             } else {
-                listaClientes.buscaCpf(cpfSel).getElemento().setNome(jTextFieldNome.getText());
-                listaClientes.buscaCpf(cpfSel).getElemento().setCpf(Long.parseLong(jTextFieldCPF.getText()));
-                listaClientes.buscaCpf(cpfSel).getElemento().setEndereco(jTextFieldEndereco.getText());
-                listaClientes.buscaCpf(cpfSel).getElemento().setTelefone(Long.parseLong(jTextFieldTelefone.getText()));
-                listaClientes.buscaCpf(cpfSel).getElemento().setIdade((int) jSpinnerIdade.getValue());
+                if (flag==true) {
+                    Cliente novo = new Cliente();
+                    novo.setNome(jTextFieldNome.getText().toLowerCase());
+                    novo.setCpf((Long.parseLong(jTextFieldCPF.getText())));
+                    novo.setEndereco(jTextFieldEndereco.getText());
+                    novo.setTelefone(Long.parseLong(jTextFieldTelefone.getText()));
+                    novo.setIdade((int) jSpinnerIdade.getValue());
+                    listaClientes.adiciona(novo);
+                } else {
+                    listaClientes.buscaCpf(cpfSel).getElemento().setNome(jTextFieldNome.getText().toLowerCase());
+                    listaClientes.buscaCpf(cpfSel).getElemento().setCpf(Long.parseLong(jTextFieldCPF.getText()));
+                    listaClientes.buscaCpf(cpfSel).getElemento().setEndereco(jTextFieldEndereco.getText().toLowerCase());
+                    listaClientes.buscaCpf(cpfSel).getElemento().setTelefone(Long.parseLong(jTextFieldTelefone.getText()));
+                    listaClientes.buscaCpf(cpfSel).getElemento().setIdade((int) jSpinnerIdade.getValue());
+                }
+                jTextFieldNome.setText("");
+                jTextFieldCPF.setText("");
+                jTextFieldEndereco.setText("");
+                jTextFieldTelefone.setText("");
+                jSpinnerIdade.setValue(0);
+                jTextFieldNome.setEnabled(false);
+                jTextFieldCPF.setEnabled(false);
+                jTextFieldEndereco.setEnabled(false);
+                jTextFieldTelefone.setEnabled(false);
+                jSpinnerIdade.setEnabled(false);
+                jButtonSalvar.setEnabled(false);
+                jButtonNovo.setEnabled(true);
+                jButtonCancelar.setEnabled(false);
+                preencherTabela();
+                jButtonPesquisar.setEnabled(true);
+                jTextFieldPesquisar.setEnabled(true);
             }
-            jTextFieldNome.setText("");
-            jTextFieldCPF.setText("");
-            jTextFieldEndereco.setText("");
-            jTextFieldTelefone.setText("");
-            jSpinnerIdade.setValue(0);
-            jTextFieldNome.setEnabled(false);
-            jTextFieldCPF.setEnabled(false);
-            jTextFieldEndereco.setEnabled(false);
-            jTextFieldTelefone.setEnabled(false);
-            jSpinnerIdade.setEnabled(false);
-            jButtonSalvar.setEnabled(false);
-            jButtonNovo.setEnabled(true);
-            jButtonCancelar.setEnabled(false);
-            preencherTabela(listaClientes);
-            jButtonPesquisar.setEnabled(true);
-            jTextFieldPesquisar.setEnabled(true);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Entrada(s) inválidas.");
         }
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
@@ -413,37 +417,33 @@ public class ConCliente extends javax.swing.JFrame {
             jButtonCancelar.setEnabled(false);
             jButtonEditar.setEnabled(false);
             jButtonExcluir.setEnabled(false);
-            preencherTabela(listaClientes);
+            preencherTabela();
         }
     }//GEN-LAST:event_jButtonExcluirActionPerformed
 
     private void jButtonPesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarActionPerformed
-        preencherTabela(listaClientes);
+        preencherTabela();
     }//GEN-LAST:event_jButtonPesquisarActionPerformed
 
     private void jTextFieldNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldNomeActionPerformed
 
-    public void preencherTabela (ListaEncadeadaCliente listaClientes) {
+    public void preencherTabela () {
         ArrayList dados =  new ArrayList();
         String[] colunas = new String[]{"Nome", "CPF", "Endereço", "Telefone", "Idade"};
         int i = 0;
         
         try{
             do {
-                if (jTextFieldPesquisar.getText().equals("")) {
-                    dados.add(new Object[]{listaClientes.pega(i).getNome(),listaClientes.pega(i).getCpf(),listaClientes.pega(i).getEndereco(),listaClientes.pega(i).getTelefone(),listaClientes.pega(i).getIdade()});
-                } else if (listaClientes.pega(i).getNome().equals(jTextFieldPesquisar.getText())) {
+                if (listaClientes.pega(i).getNome().contains(jTextFieldPesquisar.getText().toLowerCase())) {
                     dados.add(new Object[]{listaClientes.pega(i).getNome(),listaClientes.pega(i).getCpf(),listaClientes.pega(i).getEndereco(),listaClientes.pega(i).getTelefone(),listaClientes.pega(i).getIdade()});
                 }
                 i++;
             } while (listaClientes.pega(i)!=null);
         } catch (IllegalArgumentException ex) {
-            //JOptionPane.showMessageDialog(rootPane, "Erro ao preencher ArrayList: "+ex.getMessage());
         }
         ModeloTabela modelo = new ModeloTabela(dados, colunas);
-        
         jTableClientes.setModel(modelo);
         jTableClientes.getColumnModel().getColumn(0).setPreferredWidth(232);
         jTableClientes.getColumnModel().getColumn(0).setResizable(false);
@@ -460,38 +460,15 @@ public class ConCliente extends javax.swing.JFrame {
         jTableClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
     
-    //mudar para salvar em arquivo
-    /*public void listaParaBD () {
-        int i = 0;
-        while (listaClientes.posicaoOcupada(i)) {
-            control.salvar(listaClientes.pega(i));
-            i++;
-        }
-        
-    }*/
+    //escrever o metodo para salvar a lista no arquivo 
+    public void listaParaArquivo() {
+                
+    }
     
-    //mudar do arquivo para a lista
-    /*public void BDparaLista () {
-        conex.conectar();
-        try {
-            conex.executasql("select *from clientes order by nome");
-            conex.rs.first();
-            do {
-                Cliente aux = new Cliente();
-                aux.setNome(conex.rs.getString("nome"));
-                aux.setCpf(conex.rs.getLong("cpf"));
-                aux.setEndereco(conex.rs.getString("endereco"));
-                aux.setTelefone(conex.rs.getLong("telefone"));
-                aux.setIdade(conex.rs.getInt("idade"));
-                listaClientes.adiciona(aux);
-            } while (conex.rs.next());
-        } catch (SQLException ex) {
-            //JOptionPane.showMessageDialog(rootPane, "Erro ao preencher dados: "+ex.getMessage());
-        } catch (NullPointerException ex) {
-            //JOptionPane.showMessageDialog(rootPane, "Erro ao preencher dados: "+ex.getMessage());
-        }
-        conex.desconectar();
-    }*/
+    //escrever o metodo para puxar do arquivo pra lista
+    public void arquivoParaLista () {
+        
+    }
     
     public static void main(String args[]) {
         try {
