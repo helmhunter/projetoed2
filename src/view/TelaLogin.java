@@ -42,9 +42,9 @@ public class TelaLogin extends javax.swing.JFrame {
         getContentPane().setLayout(null);
 
         jLabelLogo.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabelLogo.setText("Projeto Estrutura de Dados II");
+        jLabelLogo.setText("PHARMAVALE");
         getContentPane().add(jLabelLogo);
-        jLabelLogo.setBounds(20, 40, 340, 50);
+        jLabelLogo.setBounds(20, 20, 340, 50);
         getContentPane().add(jTextFieldUsuario);
         jTextFieldUsuario.setBounds(250, 100, 170, 30);
         getContentPane().add(jPasswordFieldSenha);
