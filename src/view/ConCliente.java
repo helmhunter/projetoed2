@@ -1,5 +1,11 @@
 package view;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -12,9 +18,11 @@ public class ConCliente extends javax.swing.JFrame {
     boolean flag = false;
     ListaEncadeadaCliente listaClientes = new ListaEncadeadaCliente();
     long cpfSel;
+    File arquivo;
     
     
     public ConCliente() {
+        this.arquivo = new File("listaClientes.txt");
         initComponents();
         arquivoParaLista();
         preencherTabela();
@@ -461,13 +469,58 @@ public class ConCliente extends javax.swing.JFrame {
     }
     
     //escrever o metodo para salvar a lista no arquivo 
-    public void listaParaArquivo() {
-                
+    public boolean listaParaArquivo() {
+        try {
+            BufferedWriter bf = new BufferedWriter(new FileWriter (arquivo));
+            for (int i = 0; i<listaClientes.tamanho(); i++) {
+                bf.write(listaClientes.pega(i).getNome()+";");
+                bf.write(listaClientes.pega(i).getCpf()+";");
+                bf.write(listaClientes.pega(i).getEndereco()+";");
+                bf.write(listaClientes.pega(i).getIdade()+";");
+                bf.write(listaClientes.pega(i).getIdade()+";");
+                Integer aux[] = listaClientes.pega(i).getCompras();
+                for (int j=0; j<aux.length; j++) {
+                    bf.write(aux[j]+";");
+                }
+                bf.write("\n");
+            }
+            bf.close();
+            return true;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao salvar em arquivo."+ex.getMessage());
+            return false;
+        }
     }
     
     //escrever o metodo para puxar do arquivo pra lista
-    public void arquivoParaLista () {
+    public boolean arquivoParaLista () {
         
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("listaClientes.txt"));
+            String linha = "";
+            while ((linha = br.readLine()) != null){
+                String array[] = linha.substring(0,linha.length()-1).split(";");
+                Cliente aux = new Cliente();
+                aux.setNome(array[0]);
+                aux.setCpf(Long.parseLong(array[1]));
+                aux.setEndereco(array[2]);
+                aux.setTelefone(Long.parseLong(array[3]));
+                aux.setIdade(Integer.parseInt(array[4]));
+                Integer compras[] = new Integer[100];
+                for (int i=0; i<compras.length;i++) {
+                    if (array[i+5].equals("null")){
+                        break;
+                    }
+                    compras[i] = Integer.parseInt(array[i+5]);
+                }
+                aux.setCompras(compras);
+                listaClientes.adiciona(aux);
+            }
+            return true;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao ler em arquivo."+ex.getMessage());
+            return false;
+        }
     }
     
     public static void main(String args[]) {

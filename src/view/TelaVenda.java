@@ -5,10 +5,18 @@
  */
 package view;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import modelBeans.Cliente;
+import modelBeans.Medicamento;
 import modelBeans.ModeloTabela;
 import modelBeans.Venda;
 import modelDao.ListaEncadeadaCliente;
@@ -28,14 +36,20 @@ public class TelaVenda extends javax.swing.JFrame {
     ListaEncadeadaVenda listaVendas = new ListaEncadeadaVenda();
     Venda nova = new Venda();
     Date data = new Date();
+    File arquivoMedicamento;
+    File arquivoCliente;
+    File arquivoVenda;
     
     public TelaVenda() {
         this.registroMSSel = -1;
         this.cpfSel = -1;
+        this.arquivoMedicamento = new File("listaMedicamentos.txt");
+        this.arquivoCliente = new File ("listaClientes.txt");
+        this.arquivoVenda = new File ("listaVendas.txt");
         initComponents();
         arquivoParaListaVenda();
         arquivoParaListaCliente();
-        arquivoParaListaMedicamentos();
+        arquivoParaListaMedicamento();
         preencherTabelaClientes();
         preencherTabelaMedicamentos();
         
@@ -229,24 +243,24 @@ public class TelaVenda extends javax.swing.JFrame {
         if (cpfSel==-1) {
             JOptionPane.showMessageDialog(rootPane,"É preciso selecionar um cliente.");
         } else if (registroMSSel==-1) {
-            JOptionPane.showMessageDialog(rootPane,"É preciso selecionar um cliente.");
-        } else if (Integer.parseInt((String) jSpinnerQnt.getValue())<1) {
+            JOptionPane.showMessageDialog(rootPane,"É preciso selecionar um Medicamento.");
+        } else if ((Integer) jSpinnerQnt.getValue()<1) {
             JOptionPane.showMessageDialog(rootPane,"É preciso selecionar ao menos 1 item.");
-        } else if (Integer.parseInt((String) jSpinnerQnt.getValue())>listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().getQnt()) {
+        } else if ((Integer) jSpinnerQnt.getValue()<listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().getQnt()) {
             JOptionPane.showMessageDialog(rootPane,"Quantidade Indisponível.");
         } else {
             int resposta = 0;
             resposta = JOptionPane.showConfirmDialog(rootPane,"Confirmar Venda?");
             if (resposta == JOptionPane.YES_OPTION) {
-                int[] aux=listaClientes.buscaCpf(cpfSel).getElemento().getCompras();
+                Integer aux[]=listaClientes.buscaCpf(cpfSel).getElemento().getCompras();
                 for (int i=0; i<=aux.length; i++){
-                    if (i<=aux.length) {
+                    if (aux[i]==null) {
                         aux[i]=registroMSSel;
                         break;
                     }
-                }
+                }                
                 listaClientes.buscaCpf(cpfSel).getElemento().setCompras(aux);
-                listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setQnt(listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().getQnt()-Integer.parseInt((String) jSpinnerQnt.getValue()));
+                listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setQnt(listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().getQnt()-(Integer) jSpinnerQnt.getValue());
                 nova.setData(data.getDate());
                 nova.setCodigo(gerarCodigo());
                 nova.setCpf(cpfSel);;
@@ -262,7 +276,7 @@ public class TelaVenda extends javax.swing.JFrame {
     }//GEN-LAST:event_jTableClientesMouseClicked
 
     private void jTableMedicamentosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMedicamentosMouseClicked
-        registroMSSel = (int) jTableMedicamentos.getValueAt(jTableMedicamentos.getSelectedRow(), 0);
+        registroMSSel = (int) jTableMedicamentos.getValueAt(jTableMedicamentos.getSelectedRow(), 1);
     }//GEN-LAST:event_jTableMedicamentosMouseClicked
 
     private void jButtonSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSairActionPerformed
@@ -334,26 +348,146 @@ public class TelaVenda extends javax.swing.JFrame {
         return aux;
     }
     
-    public void arquivoParaListaVenda() {
-        
+    public boolean listaParaArquivoMedicamento() {
+        try {
+            BufferedWriter bf = new BufferedWriter(new FileWriter (arquivoMedicamento));
+            for (int i = 0; i<listaMedicamentos.tamanho(); i++) {
+                bf.write(listaMedicamentos.pega(i).getNome()+";");
+                bf.write(listaMedicamentos.pega(i).getFabricante()+";");
+                bf.write(listaMedicamentos.pega(i).getVerificador()+";");
+                bf.write(listaMedicamentos.pega(i).getAcao()+";");
+                bf.write(listaMedicamentos.pega(i).getTipo()+";");
+                bf.write(listaMedicamentos.pega(i).getQnt()+";");
+                bf.write(listaMedicamentos.pega(i).getRegistroMS()+";");
+                bf.write(listaMedicamentos.pega(i).getPreco()+";");
+                bf.write("\n");
+            }
+            bf.close();
+            return true;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao salvar em arquivo."+ex.getMessage());
+            return false;
+        }
     }
     
-    public void arquivoParaListaCliente() {
+    //escrever o metodo para puxar do arquivo pra lista
+    public boolean arquivoParaListaMedicamento () {
         
-    }
-    public void arquivoParaListaMedicamentos() {
-        
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("listaMedicamentos.txt"));
+            String linha = "";
+            while ((linha = br.readLine()) != null){
+                String array[] = linha.substring(0,linha.length()-1).split(";");
+                Medicamento aux = new Medicamento();
+                aux.setNome(array[0]);
+                aux.setFabricante(array[1]);
+                aux.setVerificador(array[2]);
+                aux.setAcao(array[3]);
+                aux.setTipo(array[4]);
+                aux.setQnt(Integer.parseInt(array[5]));
+                aux.setRegistroMS(Integer.parseInt(array[6]));
+                aux.setPreco(Double.parseDouble(array[7]));
+                listaMedicamentos.adiciona(aux);
+            }
+            return true;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao ler em arquivo."+ex.getMessage());
+            return false;
+        }
     }
     
-    public void listaParaArquivoVenda(){
-        
+    public boolean listaParaArquivoCliente () {
+        try {
+            BufferedWriter bf = new BufferedWriter(new FileWriter (arquivoCliente));
+            for (int i = 0; i<listaClientes.tamanho(); i++) {
+                bf.write(listaClientes.pega(i).getNome()+";");
+                bf.write(listaClientes.pega(i).getCpf()+";");
+                bf.write(listaClientes.pega(i).getEndereco()+";");
+                bf.write(listaClientes.pega(i).getIdade()+";");
+                bf.write(listaClientes.pega(i).getIdade()+";");
+                Integer aux[] = listaClientes.pega(i).getCompras();
+                for (int j=0; j<aux.length; j++) {
+                    bf.write(aux[j]+";");
+                }
+                bf.write("\n");
+            }
+            bf.close();
+            return true;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao salvar em arquivo."+ex.getMessage());
+            return false;
+        }
     }
     
-    public void listaParaArquivoCliente(){
+    //escrever o metodo para puxar do arquivo pra lista
+    public boolean arquivoParaListaCliente () {
         
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("listaClientes.txt"));
+            String linha = "";
+            while ((linha = br.readLine()) != null){
+                String array[] = linha.substring(0,linha.length()-1).split(";");
+                Cliente aux = new Cliente();
+                aux.setNome(array[0]);
+                aux.setCpf(Long.parseLong(array[1]));
+                aux.setEndereco(array[2]);
+                aux.setTelefone(Long.parseLong(array[3]));
+                aux.setIdade(Integer.parseInt(array[4]));
+                Integer compras[] = new Integer[100];
+                for (int i=0; i<compras.length;i++) {
+                    if (array[i+5].equals("null")){
+                        break;
+                    }
+                    compras[i] = Integer.parseInt(array[i+5]);
+                }
+                aux.setCompras(compras);
+                listaClientes.adiciona(aux);
+            }
+            return true;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao ler em arquivo."+ex.getMessage());
+            return false;
+        }
     }
-    public void listaParaArquivoMedicamento() {
+    
+    public boolean listaParaArquivoVenda () {
+        try {
+            BufferedWriter bf = new BufferedWriter(new FileWriter (arquivoVenda));
+            for (int i = 0; i<listaVendas.tamanho(); i++) {
+                bf.write(listaVendas.pega(i).getData()+";");
+                bf.write(listaVendas.pega(i).getCpf()+";");
+                bf.write(listaVendas.pega(i).getRegistroMS()+";");
+                bf.write(listaVendas.pega(i).getCodigo()+";");
+                bf.write("\n");
+            }
+            bf.close();
+            return true;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao salvar em arquivo."+ex.getMessage());
+            return false;
+        }
+    }
+    
+    //escrever o metodo para puxar do arquivo pra lista
+    public boolean arquivoParaListaVenda () {
         
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("listaVendas.txt"));
+            String linha = "";
+            while ((linha = br.readLine()) != null){
+                String array[] = linha.substring(0,linha.length()-1).split(";");
+                Venda aux = new Venda();
+                aux.setData(Long.parseLong(array[0]));
+                aux.setCpf(Long.parseLong(array[1]));
+                aux.setRegistroMS(Integer.parseInt(array[2]));
+                aux.setCodigo(Integer.parseInt(array[3]));
+                listaVendas.adiciona(aux);
+            }
+            return true;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao ler em arquivo."+ex.getMessage());
+            return false;
+        }
     }
     
     public static void main(String args[]) {

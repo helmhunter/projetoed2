@@ -6,7 +6,7 @@ public class Medicamento {
         return registroMS;
     }
 
-    public void setRegistroRS (int codigo) {
+    public void setRegistroMS (int codigo) {
         this.registroMS = codigo;
     }
 

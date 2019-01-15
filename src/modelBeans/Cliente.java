@@ -2,6 +2,11 @@ package modelBeans;
 
 public class Cliente {
 
+    public Cliente() {
+        this.compras = new Integer[100];
+    }
+
+
     public String getNome() {
         return nome;
     }
@@ -42,18 +47,19 @@ public class Cliente {
         this.idade = idade;
     }
 
-    private int[] compras; 
+    private Integer[] compras; 
     private String nome;
     private long cpf;
     private String endereco;
     private long telefone;
     private int idade;
 
-    public int[] getCompras() {
+    
+    public Integer[] getCompras() {
         return compras;
     }
 
-    public void setCompras(int[] compras) {
+    public void setCompras(Integer[] compras) {
         this.compras = compras;
     }
     

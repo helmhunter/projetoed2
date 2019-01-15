@@ -1,5 +1,11 @@
 package view;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -12,8 +18,10 @@ public class ConMedicamento extends javax.swing.JFrame {
     ListaEncadeadaMedicamento listaMedicamentos = new ListaEncadeadaMedicamento();
     int registroMSSel;
     boolean flag = false;
+    File arquivo;
     
     public ConMedicamento() {
+        this.arquivo = new File("listaMedicamentos.txt");
         initComponents();
         arquivoParaLista();
         preencherTabela();
@@ -353,11 +361,11 @@ public class ConMedicamento extends javax.swing.JFrame {
                     novo.setAcao((String) jComboBoxAcao.getSelectedItem());
                     novo.setTipo((String) jComboBoxTipo.getSelectedItem());
                     novo.setQnt((int) jSpinnerQnt.getValue());
-                    novo.setRegistroRS((Integer.parseInt(jTextFieldRegistroMS.getText())));
+                    novo.setRegistroMS((Integer.parseInt(jTextFieldRegistroMS.getText())));
                     novo.setPreco(Double.parseDouble(jTextFieldPreco.getText()));
                     listaMedicamentos.adiciona(novo);
                 } else {
-                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setRegistroRS(Integer.parseInt(jTextFieldRegistroMS.getText()));
+                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setRegistroMS(Integer.parseInt(jTextFieldRegistroMS.getText()));
                     listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setNome(jTextFieldNome.getText().toLowerCase());
                     listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setFabricante(jTextFieldFabricante.getText());
                     listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setVerificador(jTextFieldVerificador.getText());
@@ -554,12 +562,52 @@ public class ConMedicamento extends javax.swing.JFrame {
     }
     
    //escrever o metodo para salvar a lista no arquivo 
-    public void listaParaArquivo() {
-                
+    public boolean listaParaArquivo() {
+        try {
+            BufferedWriter bf = new BufferedWriter(new FileWriter (arquivo));
+            for (int i = 0; i<listaMedicamentos.tamanho(); i++) {
+                bf.write(listaMedicamentos.pega(i).getNome()+";");
+                bf.write(listaMedicamentos.pega(i).getFabricante()+";");
+                bf.write(listaMedicamentos.pega(i).getVerificador()+";");
+                bf.write(listaMedicamentos.pega(i).getAcao()+";");
+                bf.write(listaMedicamentos.pega(i).getTipo()+";");
+                bf.write(listaMedicamentos.pega(i).getQnt()+";");
+                bf.write(listaMedicamentos.pega(i).getRegistroMS()+";");
+                bf.write(listaMedicamentos.pega(i).getPreco()+";");
+                bf.write("\n");
+            }
+            bf.close();
+            return true;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao salvar em arquivo."+ex.getMessage());
+            return false;
+        }
     }
     
     //escrever o metodo para puxar do arquivo pra lista
-    public void arquivoParaLista () {
+    public boolean arquivoParaLista () {
+        
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("listaMedicamentos.txt"));
+            String linha = "";
+            while ((linha = br.readLine()) != null){
+                String array[] = linha.substring(0,linha.length()-1).split(";");
+                Medicamento aux = new Medicamento();
+                aux.setNome(array[0]);
+                aux.setFabricante(array[1]);
+                aux.setVerificador(array[2]);
+                aux.setAcao(array[3]);
+                aux.setTipo(array[4]);
+                aux.setQnt(Integer.parseInt(array[5]));
+                aux.setRegistroMS(Integer.parseInt(array[6]));
+                aux.setPreco(Double.parseDouble(array[7]));
+                listaMedicamentos.adiciona(aux);
+            }
+            return true;
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(rootPane, "Erro ao ler em arquivo."+ex.getMessage());
+            return false;
+        }
         
     }
     
