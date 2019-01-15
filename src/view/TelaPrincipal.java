@@ -230,6 +230,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void jMenuItemConClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemConClientesActionPerformed
         ConCliente cadCli = new ConCliente();
         cadCli.setVisible(true);
+        //
     }//GEN-LAST:event_jMenuItemConClientesActionPerformed
 
     private void jMenuItemUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemUsuariosActionPerformed
