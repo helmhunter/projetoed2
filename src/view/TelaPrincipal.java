@@ -232,7 +232,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItemUsuariosActionPerformed
 
     private void jButtonVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonVendasActionPerformed
-        Venda ven = new Venda();
+        TelaVenda ven = new TelaVenda();
         ven.setVisible(true);
     }//GEN-LAST:event_jButtonVendasActionPerformed
 

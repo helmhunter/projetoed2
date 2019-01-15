@@ -357,14 +357,14 @@ public class ConMedicamento extends javax.swing.JFrame {
                     novo.setPreco(Double.parseDouble(jTextFieldPreco.getText()));
                     listaMedicamentos.adiciona(novo);
                 } else {
-                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setRegistroRS(Integer.parseInt(jTextFieldRegistroMS.getText()));
-                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setNome(jTextFieldNome.getText().toLowerCase());
-                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setFabricante(jTextFieldFabricante.getText());
-                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setVerificador(jTextFieldVerificador.getText());
-                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setAcao((String) jComboBoxAcao.getSelectedItem());
-                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setTipo((String) jComboBoxTipo.getSelectedItem());
-                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setQnt((int) jSpinnerQnt.getValue());
-                    listaMedicamentos.buscaCodigo(registroMSSel).getElemento().setPreco(Double.parseDouble(jTextFieldPreco.getText()));
+                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setRegistroRS(Integer.parseInt(jTextFieldRegistroMS.getText()));
+                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setNome(jTextFieldNome.getText().toLowerCase());
+                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setFabricante(jTextFieldFabricante.getText());
+                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setVerificador(jTextFieldVerificador.getText());
+                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setAcao((String) jComboBoxAcao.getSelectedItem());
+                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setTipo((String) jComboBoxTipo.getSelectedItem());
+                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setQnt((int) jSpinnerQnt.getValue());
+                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setPreco(Double.parseDouble(jTextFieldPreco.getText()));
                 }
                 jTextFieldRegistroMS.setText("");
                 jTextFieldNome.setText("");
@@ -489,7 +489,7 @@ public class ConMedicamento extends javax.swing.JFrame {
 
     private void jTableMedicamentosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMedicamentosMouseClicked
         registroMSSel = (int) jTableMedicamentos.getValueAt(jTableMedicamentos.getSelectedRow(), 0);
-        Medicamento model = listaMedicamentos.buscaCodigo(registroMSSel).getElemento();
+        Medicamento model = listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento();
         if (model ==  null) {
             JOptionPane.showMessageDialog(rootPane, "Erro ao selecionar");
         } else {

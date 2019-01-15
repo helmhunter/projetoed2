@@ -1,36 +1,35 @@
 package modelDao;
 
-import modelBeans.NoMedicamento;
-import modelBeans.Medicamento;
+import modelBeans.NoVenda;
+import modelBeans.Venda;
 
-public class ListaEncadeadaMedicamento {
-
-    private NoMedicamento primeira;
-    private NoMedicamento ultima;
+public class ListaEncadeadaVenda {
+    private NoVenda primeira;
+    private NoVenda ultima;
     private int total;
 
-    public ListaEncadeadaMedicamento() {
+    public ListaEncadeadaVenda() {
         this.total = 0;
     }
     
-    public void adicionaComeco (Medicamento elemento) {
+    public void adicionaComeco (Venda elemento) {
         if (this.total == 0) {
-            NoMedicamento nova = new NoMedicamento(elemento);
+            NoVenda nova = new NoVenda(elemento);
             this.primeira = nova;
             this.ultima = nova;
         } else {
-            NoMedicamento nova =  new NoMedicamento(this.primeira, elemento);
+            NoVenda nova =  new NoVenda(this.primeira, elemento);
             this.primeira.setAnterior(nova);
             this.primeira = nova;
         }
         this.total++;
     }
     
-    public void adiciona (Medicamento elemento) {
+    public void adiciona (Venda elemento) {
         if (this.total==0) {
             this.adicionaComeco(elemento);
         } else {
-            NoMedicamento nova = new NoMedicamento(elemento);
+            NoVenda nova = new NoVenda(elemento);
             this.ultima.setProxima(nova);
             nova.setAnterior(this.ultima);
             this.ultima = nova;
@@ -42,26 +41,26 @@ public class ListaEncadeadaMedicamento {
         return posicao >= 0 && posicao < this.total;
     }
     
-    public NoMedicamento pegaCelula (int posicao) {
+    public NoVenda pegaCelula (int posicao) {
         if (!this.posicaoOcupada(posicao)) {
             throw new IllegalArgumentException("Posição não existe.");
         }
-        NoMedicamento atual = primeira;
+        NoVenda atual = primeira;
         for (int i = 0; i < posicao; i++) {
             atual = atual.getProxima();
         }
         return atual;
     }
     
-    public void adiciona (int posicao, Medicamento elemento) {
+    public void adiciona (int posicao, Venda elemento) {
         if (posicao == 0) {
             this.adicionaComeco(elemento);
         } else if (posicao == this.total){
             this.adiciona(elemento);
         } else {
-            NoMedicamento anterior = this.pegaCelula(posicao-1);
-            NoMedicamento proxima = anterior.getProxima();
-            NoMedicamento nova = new NoMedicamento(anterior.getProxima(), elemento);
+            NoVenda anterior = this.pegaCelula(posicao-1);
+            NoVenda proxima = anterior.getProxima();
+            NoVenda nova = new NoVenda(anterior.getProxima(), elemento);
             nova.setAnterior(anterior);
             anterior.setProxima(nova);
             proxima.setAnterior(nova);
@@ -87,7 +86,7 @@ public class ListaEncadeadaMedicamento {
         if (this.total == 1) {
             this.removeComeco();
         } else {
-            NoMedicamento penultima = this.ultima.getAnterior();
+            NoVenda penultima = this.ultima.getAnterior();
             penultima.setProxima(null);
             this.ultima = penultima;
             this.total--;
@@ -103,9 +102,9 @@ public class ListaEncadeadaMedicamento {
         } else if (posicao == this.total - 1) {
             this.removeFim();
         } else  {
-            NoMedicamento anterior = this.pegaCelula(posicao - 1);
-            NoMedicamento atual = anterior.getProxima();
-            NoMedicamento proxima =  atual.getProxima();
+            NoVenda anterior = this.pegaCelula(posicao - 1);
+            NoVenda atual = anterior.getProxima();
+            NoVenda proxima =  atual.getProxima();
             anterior.setProxima(proxima);
             proxima.setAnterior(anterior);
             this.total--;
@@ -116,12 +115,12 @@ public class ListaEncadeadaMedicamento {
         return this.total;
     }
     
-    public Medicamento pega (int posicao) {
+    public Venda pega (int posicao) {
         return this.pegaCelula(posicao).getElemento();
     }
     
     public boolean contem (int codigo) {
-        NoMedicamento atual = this.primeira;
+        NoVenda atual = this.primeira;
         while (atual != null) {
             if (atual.getElemento().getRegistroMS()==codigo) {
                 return true;
@@ -131,13 +130,13 @@ public class ListaEncadeadaMedicamento {
         return false;
     }
     
-    public NoMedicamento buscaNome (String nome) {
+    public NoVenda buscaCpf (long nome) {
         if (this.total == 0) {
             return null;
         }
-        NoMedicamento atual = this.primeira;
+        NoVenda atual = this.primeira;
         while (atual != null) {
-            if (atual.getElemento().getNome().equals(nome)) {
+            if (atual.getElemento().getCpf()==nome) {
                 return atual;
             }
             atual = atual.getProxima();
@@ -145,11 +144,11 @@ public class ListaEncadeadaMedicamento {
         return null;
     }
     
-    public NoMedicamento buscaRegistroMS (int codigo) {
+    public NoVenda buscaRegistroMS (int codigo) {
         if (this.total == 0) {
             return null;
         }
-        NoMedicamento atual = this.primeira;
+        NoVenda atual = this.primeira;
         while (atual != null) {
             if (atual.getElemento().getRegistroMS()==codigo) {
                 return atual;
@@ -165,9 +164,9 @@ public class ListaEncadeadaMedicamento {
         } else if (buscaRegistroMS(codigo) == this.ultima) {
             this.removeFim();
         } else {
-            NoMedicamento anterior = this.buscaRegistroMS(codigo);
-            NoMedicamento atual = anterior.getProxima();
-            NoMedicamento proxima =  atual.getProxima();
+            NoVenda anterior = this.buscaRegistroMS(codigo);
+            NoVenda atual = anterior.getProxima();
+            NoVenda proxima =  atual.getProxima();
             anterior.setProxima(proxima);
             proxima.setAnterior(anterior);
             this.total--;
