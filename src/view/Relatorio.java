@@ -143,8 +143,7 @@ public class Relatorio extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -152,8 +151,9 @@ public class Relatorio extends javax.swing.JFrame {
                             .addComponent(jButtonBuscar)
                             .addComponent(jTextFieldBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonSair)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jButtonSair))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -209,7 +209,7 @@ public class Relatorio extends javax.swing.JFrame {
             while ((linha = br.readLine()) != null){
                 String array[] = linha.substring(0,linha.length()-1).split(";");
                 Venda aux = new Venda();
-                aux.setData(Long.parseLong(array[0]));
+                aux.setData(array[0]);
                 aux.setCpf(Long.parseLong(array[1]));
                 aux.setRegistroMS(Integer.parseInt(array[2]));
                 aux.setCodigo(Integer.parseInt(array[3]));
@@ -268,9 +268,9 @@ public class Relatorio extends javax.swing.JFrame {
         }
         ModeloTabela modelo = new ModeloTabela(dados, colunas);
         jTableClientes.setModel(modelo);
-        jTableClientes.getColumnModel().getColumn(0).setPreferredWidth(155);
+        jTableClientes.getColumnModel().getColumn(0).setPreferredWidth(168);
         jTableClientes.getColumnModel().getColumn(0).setResizable(false);
-        jTableClientes.getColumnModel().getColumn(1).setPreferredWidth(154);
+        jTableClientes.getColumnModel().getColumn(1).setPreferredWidth(168);
         jTableClientes.getColumnModel().getColumn(1).setResizable(false);
         jTableClientes.setAutoResizeMode(jTableClientes.AUTO_RESIZE_OFF);
         jTableClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -295,13 +295,13 @@ public class Relatorio extends javax.swing.JFrame {
         }
         ModeloTabela modelo = new ModeloTabela(dados, colunas);
         jTableVendas.setModel(modelo);
-        jTableVendas.getColumnModel().getColumn(0).setPreferredWidth(87);
+        jTableVendas.getColumnModel().getColumn(0).setPreferredWidth(35);
         jTableVendas.getColumnModel().getColumn(0).setResizable(false);
-        jTableVendas.getColumnModel().getColumn(1).setPreferredWidth(86);
+        jTableVendas.getColumnModel().getColumn(1).setPreferredWidth(85);
         jTableVendas.getColumnModel().getColumn(1).setResizable(false);
         jTableVendas.getColumnModel().getColumn(2).setPreferredWidth(86);
         jTableVendas.getColumnModel().getColumn(2).setResizable(false);
-        jTableVendas.getColumnModel().getColumn(3).setPreferredWidth(86);
+        jTableVendas.getColumnModel().getColumn(3).setPreferredWidth(136);
         jTableVendas.getColumnModel().getColumn(3).setResizable(false);
         jTableVendas.setAutoResizeMode(jTableClientes.AUTO_RESIZE_OFF);
         jTableVendas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

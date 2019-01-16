@@ -1,5 +1,7 @@
 package modelBeans;
 
+import java.text.SimpleDateFormat;
+
 public class Venda {
 
     public int getCodigo() {
@@ -26,7 +28,7 @@ public class Venda {
         this.registroMS = registroMS;
     }
 
-    private long data;
+    private String data;
     private int codigo;
     private long cpf;
     private int registroMS;
@@ -34,14 +36,14 @@ public class Venda {
     /**
      * @return the data
      */
-    public long getData() {
+    public String getData() {
         return data;
     }
 
     /**
      * @param data the data to set
      */
-    public void setData(long data) {
+    public void setData(String data) {
         this.data = data;
     }
     

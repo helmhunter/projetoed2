@@ -1,1 +1,1 @@
-abc;abc;abc;Local;Fitoterápico;4;123;123.0;
+abc;abc;abc;Sistêmica;Homeopático;7;123;123.0;

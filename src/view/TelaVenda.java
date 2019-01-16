@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
@@ -35,12 +36,13 @@ public class TelaVenda extends javax.swing.JFrame {
     int registroMSSel;
     ListaEncadeadaVenda listaVendas = new ListaEncadeadaVenda();
     Venda nova = new Venda();
-    Date data = new Date();
+    SimpleDateFormat data;
     File arquivoMedicamento;
     File arquivoCliente;
     File arquivoVenda;
     
     public TelaVenda() {
+        this.data = new SimpleDateFormat("dd/MM/yyyy hh:mm");
         this.registroMSSel = -1;
         this.cpfSel = -1;
         this.arquivoMedicamento = new File("listaMedicamentos.txt");
@@ -265,7 +267,7 @@ public class TelaVenda extends javax.swing.JFrame {
                 }                
                 listaClientes.buscaCpf(cpfSel).getElemento().setCompras(aux);
                 listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setQnt(listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().getQnt()-(Integer) jSpinnerQnt.getValue());
-                nova.setData(data.getDate());
+                nova.setData(data.format(new Date()));
                 nova.setCodigo(gerarCodigo());
                 nova.setCpf(cpfSel);;
                 nova.setRegistroMS(registroMSSel);
@@ -485,7 +487,7 @@ public class TelaVenda extends javax.swing.JFrame {
             while ((linha = br.readLine()) != null){
                 String array[] = linha.substring(0,linha.length()-1).split(";");
                 Venda aux = new Venda();
-                aux.setData(Long.parseLong(array[0]));
+                aux.setData(array[0]);
                 aux.setCpf(Long.parseLong(array[1]));
                 aux.setRegistroMS(Integer.parseInt(array[2]));
                 aux.setCodigo(Integer.parseInt(array[3]));
