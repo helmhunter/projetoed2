@@ -145,6 +145,11 @@ public class TelaVenda extends javax.swing.JFrame {
         jButtonPesquisarCliente.setText("Pesquisar");
 
         jButtonPesquisarMedicamento.setText("Pesquisar");
+        jButtonPesquisarMedicamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPesquisarMedicamentoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -177,10 +182,9 @@ public class TelaVenda extends javax.swing.JFrame {
                                 .addGap(22, 22, 22)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButtonSair, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jButtonVender, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jSpinnerQnt)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                            .addComponent(jButtonVender, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jSpinnerQnt)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -246,7 +250,7 @@ public class TelaVenda extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane,"É preciso selecionar um Medicamento.");
         } else if ((Integer) jSpinnerQnt.getValue()<1) {
             JOptionPane.showMessageDialog(rootPane,"É preciso selecionar ao menos 1 item.");
-        } else if ((Integer) jSpinnerQnt.getValue()<listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().getQnt()) {
+        } else if ((Integer) jSpinnerQnt.getValue()>listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().getQnt()) {
             JOptionPane.showMessageDialog(rootPane,"Quantidade Indisponível.");
         } else {
             int resposta = 0;
@@ -285,6 +289,10 @@ public class TelaVenda extends javax.swing.JFrame {
         listaParaArquivoMedicamento();
         dispose();
     }//GEN-LAST:event_jButtonSairActionPerformed
+
+    private void jButtonPesquisarMedicamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPesquisarMedicamentoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButtonPesquisarMedicamentoActionPerformed
 
     public void preencherTabelaClientes () {
         ArrayList dados =  new ArrayList();
