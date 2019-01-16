@@ -349,7 +349,7 @@ public class TelaVenda extends javax.swing.JFrame {
     public int gerarCodigo () {
         int aux=1;
         while (true) {
-        if (listaVendas.contem(1)){
+        if (listaVendas.contem(aux)){
             aux++;
         } else {
             break;
@@ -413,7 +413,7 @@ public class TelaVenda extends javax.swing.JFrame {
                 bf.write(listaClientes.pega(i).getNome()+";");
                 bf.write(listaClientes.pega(i).getCpf()+";");
                 bf.write(listaClientes.pega(i).getEndereco()+";");
-                bf.write(listaClientes.pega(i).getIdade()+";");
+                bf.write(listaClientes.pega(i).getTelefone()+";");
                 bf.write(listaClientes.pega(i).getIdade()+";");
                 Integer aux[] = listaClientes.pega(i).getCompras();
                 for (int j=0; j<aux.length; j++) {
