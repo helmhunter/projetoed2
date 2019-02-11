@@ -7,18 +7,20 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
-import modelDao.ListaEncadeadaMedicamento;
 import modelBeans.Medicamento;
 import modelBeans.ModeloTabela;
+import modelDao.Operacoes;
 
 public class ConMedicamento extends javax.swing.JFrame {
 
-    ListaEncadeadaMedicamento listaMedicamentos = new ListaEncadeadaMedicamento();
+    LinkedList<Medicamento> listaMedicamentos = new LinkedList<>();
     int registroMSSel;
     boolean flag = false;
     File arquivo;
+    Operacoes op = new Operacoes();
     
     public ConMedicamento() {
         this.arquivo = new File("listaMedicamentos.txt");
@@ -363,16 +365,16 @@ public class ConMedicamento extends javax.swing.JFrame {
                     novo.setQnt((int) jSpinnerQnt.getValue());
                     novo.setRegistroMS((Integer.parseInt(jTextFieldRegistroMS.getText())));
                     novo.setPreco(Double.parseDouble(jTextFieldPreco.getText()));
-                    listaMedicamentos.adiciona(novo);
+                    listaMedicamentos.add(novo);
                 } else {
-                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setRegistroMS(Integer.parseInt(jTextFieldRegistroMS.getText()));
-                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setNome(jTextFieldNome.getText().toLowerCase());
-                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setFabricante(jTextFieldFabricante.getText());
-                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setVerificador(jTextFieldVerificador.getText());
-                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setAcao((String) jComboBoxAcao.getSelectedItem());
-                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setTipo((String) jComboBoxTipo.getSelectedItem());
-                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setQnt((int) jSpinnerQnt.getValue());
-                    listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setPreco(Double.parseDouble(jTextFieldPreco.getText()));
+                    op.buscaRegistroMS(listaMedicamentos, registroMSSel).setRegistroMS(Integer.parseInt(jTextFieldRegistroMS.getText()));
+                    op.buscaRegistroMS(listaMedicamentos, registroMSSel).setNome(jTextFieldNome.getText().toLowerCase());
+                    op.buscaRegistroMS(listaMedicamentos, registroMSSel).setFabricante(jTextFieldFabricante.getText());
+                    op.buscaRegistroMS(listaMedicamentos, registroMSSel).setVerificador(jTextFieldVerificador.getText());
+                    op.buscaRegistroMS(listaMedicamentos, registroMSSel).setAcao((String) jComboBoxAcao.getSelectedItem());
+                    op.buscaRegistroMS(listaMedicamentos, registroMSSel).setTipo((String) jComboBoxTipo.getSelectedItem());
+                    op.buscaRegistroMS(listaMedicamentos, registroMSSel).setQnt((int) jSpinnerQnt.getValue());
+                    op.buscaRegistroMS(listaMedicamentos, registroMSSel).setPreco(Double.parseDouble(jTextFieldPreco.getText()));
                 }
                 jTextFieldRegistroMS.setText("");
                 jTextFieldNome.setText("");
@@ -474,7 +476,7 @@ public class ConMedicamento extends javax.swing.JFrame {
         int resposta = 0;
         resposta = JOptionPane.showConfirmDialog(rootPane,"Confirmar exclusão?");
         if (resposta == JOptionPane.YES_OPTION) {
-            listaMedicamentos.removeRegistroMS(registroMSSel);
+            listaMedicamentos.remove(op.buscaRegistroMS(listaMedicamentos, registroMSSel));
             jTextFieldRegistroMS.setText("");
             jTextFieldNome.setText("");
             jTextFieldFabricante.setText("");
@@ -497,7 +499,7 @@ public class ConMedicamento extends javax.swing.JFrame {
 
     private void jTableMedicamentosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableMedicamentosMouseClicked
         registroMSSel = (int) jTableMedicamentos.getValueAt(jTableMedicamentos.getSelectedRow(), 0);
-        Medicamento model = listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento();
+        Medicamento model = op.buscaRegistroMS(listaMedicamentos, registroMSSel);
         if (model ==  null) {
             JOptionPane.showMessageDialog(rootPane, "Erro ao selecionar");
         } else {
@@ -530,12 +532,12 @@ public class ConMedicamento extends javax.swing.JFrame {
         
         try {
             do {
-                if (listaMedicamentos.pega(i).getNome().contains(jTextFieldPesquisar.getText().toLowerCase())) {
-                    dados.add(new Object[]{listaMedicamentos.pega(i).getRegistroMS(),listaMedicamentos.pega(i).getNome(),listaMedicamentos.pega(i).getFabricante(),listaMedicamentos.pega(i).getVerificador(),listaMedicamentos.pega(i).getAcao(),listaMedicamentos.pega(i).getTipo(),listaMedicamentos.pega(i).getQnt(),listaMedicamentos.pega(i).getPreco()});
+                if (listaMedicamentos.get(i).getNome().contains(jTextFieldPesquisar.getText().toLowerCase())) {
+                    dados.add(new Object[]{listaMedicamentos.get(i).getRegistroMS(),listaMedicamentos.get(i).getNome(),listaMedicamentos.get(i).getFabricante(),listaMedicamentos.get(i).getVerificador(),listaMedicamentos.get(i).getAcao(),listaMedicamentos.get(i).getTipo(),listaMedicamentos.get(i).getQnt(),listaMedicamentos.get(i).getPreco()});
                 }
                 i++;
-            } while (listaMedicamentos.pega(i)!=null);
-        } catch (IllegalArgumentException ex) {
+            } while (listaMedicamentos.get(i)!=null);
+        } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
         }
         ModeloTabela modelo = new ModeloTabela(dados, colunas);
         jTableMedicamentos.setModel(modelo);
@@ -565,15 +567,15 @@ public class ConMedicamento extends javax.swing.JFrame {
     public boolean listaParaArquivo() {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter (arquivo));
-            for (int i = 0; i<listaMedicamentos.tamanho(); i++) {
-                bf.write(listaMedicamentos.pega(i).getNome()+";");
-                bf.write(listaMedicamentos.pega(i).getFabricante()+";");
-                bf.write(listaMedicamentos.pega(i).getVerificador()+";");
-                bf.write(listaMedicamentos.pega(i).getAcao()+";");
-                bf.write(listaMedicamentos.pega(i).getTipo()+";");
-                bf.write(listaMedicamentos.pega(i).getQnt()+";");
-                bf.write(listaMedicamentos.pega(i).getRegistroMS()+";");
-                bf.write(listaMedicamentos.pega(i).getPreco()+";");
+            for (int i = 0; i<listaMedicamentos.size(); i++) {
+                bf.write(listaMedicamentos.get(i).getNome()+";");
+                bf.write(listaMedicamentos.get(i).getFabricante()+";");
+                bf.write(listaMedicamentos.get(i).getVerificador()+";");
+                bf.write(listaMedicamentos.get(i).getAcao()+";");
+                bf.write(listaMedicamentos.get(i).getTipo()+";");
+                bf.write(listaMedicamentos.get(i).getQnt()+";");
+                bf.write(listaMedicamentos.get(i).getRegistroMS()+";");
+                bf.write(listaMedicamentos.get(i).getPreco()+";");
                 bf.write("\n");
             }
             bf.close();
@@ -601,7 +603,7 @@ public class ConMedicamento extends javax.swing.JFrame {
                 aux.setQnt(Integer.parseInt(array[5]));
                 aux.setRegistroMS(Integer.parseInt(array[6]));
                 aux.setPreco(Double.parseDouble(array[7]));
-                listaMedicamentos.adiciona(aux);
+                listaMedicamentos.add(aux);
             }
             return true;
         } catch (IOException ex) {

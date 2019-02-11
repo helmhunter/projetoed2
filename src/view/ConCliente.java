@@ -7,18 +7,20 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import modelBeans.Cliente;
 import modelBeans.ModeloTabela;
-import modelDao.ListaEncadeadaCliente;
+import modelDao.Operacoes;
 
 public class ConCliente extends javax.swing.JFrame {
 
     boolean flag = false;
-    ListaEncadeadaCliente listaClientes = new ListaEncadeadaCliente();
+    LinkedList<Cliente> listaClientes = new LinkedList<Cliente>();
     long cpfSel;
     File arquivo;
+    Operacoes op = new Operacoes();
     
     
     public ConCliente() {
@@ -281,7 +283,7 @@ public class ConCliente extends javax.swing.JFrame {
 
     private void jTableClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableClientesMouseClicked
         cpfSel = (long) jTableClientes.getValueAt(jTableClientes.getSelectedRow(), 1);
-        Cliente model = listaClientes.buscaCpf(cpfSel).getElemento();
+        Cliente model = op.buscaCpf(listaClientes, cpfSel);
         if (model ==  null) {
             JOptionPane.showMessageDialog(rootPane, "Erro ao selecionar");
         } else {
@@ -341,13 +343,13 @@ public class ConCliente extends javax.swing.JFrame {
                     novo.setEndereco(jTextFieldEndereco.getText());
                     novo.setTelefone(Long.parseLong(jTextFieldTelefone.getText()));
                     novo.setIdade((int) jSpinnerIdade.getValue());
-                    listaClientes.adiciona(novo);
+                    listaClientes.add(novo);
                 } else {
-                    listaClientes.buscaCpf(cpfSel).getElemento().setNome(jTextFieldNome.getText().toLowerCase());
-                    listaClientes.buscaCpf(cpfSel).getElemento().setCpf(Long.parseLong(jTextFieldCPF.getText()));
-                    listaClientes.buscaCpf(cpfSel).getElemento().setEndereco(jTextFieldEndereco.getText().toLowerCase());
-                    listaClientes.buscaCpf(cpfSel).getElemento().setTelefone(Long.parseLong(jTextFieldTelefone.getText()));
-                    listaClientes.buscaCpf(cpfSel).getElemento().setIdade((int) jSpinnerIdade.getValue());
+                    op.buscaCpf(listaClientes, cpfSel).setNome(jTextFieldNome.getText().toLowerCase());
+                    op.buscaCpf(listaClientes, cpfSel).setCpf(Long.parseLong(jTextFieldCPF.getText()));
+                    op.buscaCpf(listaClientes, cpfSel).setEndereco(jTextFieldEndereco.getText().toLowerCase());
+                    op.buscaCpf(listaClientes, cpfSel).setTelefone(Long.parseLong(jTextFieldTelefone.getText()));
+                    op.buscaCpf(listaClientes, cpfSel).setIdade((int) jSpinnerIdade.getValue());
                 }
                 jTextFieldNome.setText("");
                 jTextFieldCPF.setText("");
@@ -409,7 +411,7 @@ public class ConCliente extends javax.swing.JFrame {
         int resposta = 0;
         resposta = JOptionPane.showConfirmDialog(rootPane,"Confirmar exclusão?");
         if (resposta == JOptionPane.YES_OPTION) {
-            listaClientes.removeCpf(cpfSel);
+            listaClientes.remove(op.buscaCpf(listaClientes, cpfSel));
             jTextFieldNome.setText("");
             jTextFieldCPF.setText("");
             jTextFieldEndereco.setText("");
@@ -444,12 +446,12 @@ public class ConCliente extends javax.swing.JFrame {
         
         try{
             do {
-                if (listaClientes.pega(i).getNome().contains(jTextFieldPesquisar.getText().toLowerCase())) {
-                    dados.add(new Object[]{listaClientes.pega(i).getNome(),listaClientes.pega(i).getCpf(),listaClientes.pega(i).getEndereco(),listaClientes.pega(i).getTelefone(),listaClientes.pega(i).getIdade()});
+                if (listaClientes.get(i).getNome().contains(jTextFieldPesquisar.getText().toLowerCase())) {
+                    dados.add(new Object[]{listaClientes.get(i).getNome(),listaClientes.get(i).getCpf(),listaClientes.get(i).getEndereco(),listaClientes.get(i).getTelefone(),listaClientes.get(i).getIdade()});
                 }
                 i++;
-            } while (listaClientes.pega(i)!=null);
-        } catch (IllegalArgumentException ex) {
+            } while (listaClientes.get(i)!=null);
+        } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
         }
         ModeloTabela modelo = new ModeloTabela(dados, colunas);
         jTableClientes.setModel(modelo);
@@ -472,13 +474,13 @@ public class ConCliente extends javax.swing.JFrame {
     public boolean listaParaArquivo() {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter (arquivo));
-            for (int i = 0; i<listaClientes.tamanho(); i++) {
-                bf.write(listaClientes.pega(i).getNome()+";");
-                bf.write(listaClientes.pega(i).getCpf()+";");
-                bf.write(listaClientes.pega(i).getEndereco()+";");
-                bf.write(listaClientes.pega(i).getTelefone()+";");
-                bf.write(listaClientes.pega(i).getIdade()+";");
-                Integer aux[] = listaClientes.pega(i).getCompras();
+            for (int i = 0; i<listaClientes.size(); i++) {
+                bf.write(listaClientes.get(i).getNome()+";");
+                bf.write(listaClientes.get(i).getCpf()+";");
+                bf.write(listaClientes.get(i).getEndereco()+";");
+                bf.write(listaClientes.get(i).getTelefone()+";");
+                bf.write(listaClientes.get(i).getIdade()+";");
+                Integer aux[] = listaClientes.get(i).getCompras();
                 for (int j=0; j<aux.length; j++) {
                     bf.write(aux[j]+";");
                 }
@@ -514,7 +516,7 @@ public class ConCliente extends javax.swing.JFrame {
                     compras[i] = Integer.parseInt(array[i+5]);
                 }
                 aux.setCompras(compras);
-                listaClientes.adiciona(aux);
+                listaClientes.add(aux);
             }
             return true;
         } catch (IOException ex) {

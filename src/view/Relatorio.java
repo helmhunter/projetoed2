@@ -9,13 +9,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import modelBeans.Cliente;
 import modelBeans.ModeloTabela;
 import modelBeans.Venda;
-import modelDao.ListaEncadeadaCliente;
-import modelDao.ListaEncadeadaVenda;
 
 /**
  *
@@ -23,8 +22,8 @@ import modelDao.ListaEncadeadaVenda;
  */
 public class Relatorio extends javax.swing.JFrame {
 
-    ListaEncadeadaVenda listaVendas = new ListaEncadeadaVenda();
-    ListaEncadeadaCliente listaClientes = new ListaEncadeadaCliente();
+    LinkedList<Venda> listaVendas = new LinkedList<>();
+    LinkedList<Cliente> listaClientes = new LinkedList<>();
     long cpfSel=-1;
     
     public Relatorio() {
@@ -213,7 +212,7 @@ public class Relatorio extends javax.swing.JFrame {
                 aux.setCpf(Long.parseLong(array[1]));
                 aux.setRegistroMS(Integer.parseInt(array[2]));
                 aux.setCodigo(Integer.parseInt(array[3]));
-                listaVendas.adiciona(aux);
+                listaVendas.add(aux);
             }
             return true;
         } catch (IOException ex) {
@@ -243,7 +242,7 @@ public class Relatorio extends javax.swing.JFrame {
                     compras[i] = Integer.parseInt(array[i+5]);
                 }
                 aux.setCompras(compras);
-                listaClientes.adiciona(aux);
+                listaClientes.add(aux);
             }
             return true;
         } catch (IOException ex) {
@@ -259,11 +258,11 @@ public class Relatorio extends javax.swing.JFrame {
         
         try{
             do {
-                if (listaClientes.pega(i).getNome().contains(jTextFieldBuscar.getText().toLowerCase())) {
-                    dados.add(new Object[]{listaClientes.pega(i).getNome(),listaClientes.pega(i).getCpf()});
+                if (listaClientes.get(i).getNome().contains(jTextFieldBuscar.getText().toLowerCase())) {
+                    dados.add(new Object[]{listaClientes.get(i).getNome(),listaClientes.get(i).getCpf()});
                 }
                 i++;
-            } while (listaClientes.pega(i)!=null);
+            } while (listaClientes.get(i)!=null);
         } catch (IllegalArgumentException ex) {
         }
         ModeloTabela modelo = new ModeloTabela(dados, colunas);
@@ -284,13 +283,13 @@ public class Relatorio extends javax.swing.JFrame {
         try{
             do {
                 if (cpfSel==-1) {
-                    dados.add(new Object[]{listaVendas.pega(i).getCodigo(),listaVendas.pega(i).getRegistroMS(),listaVendas.pega(i).getCpf(),listaVendas.pega(i).getData()});
+                    dados.add(new Object[]{listaVendas.get(i).getCodigo(),listaVendas.get(i).getRegistroMS(),listaVendas.get(i).getCpf(),listaVendas.get(i).getData()});
                 }
-                else if (String.valueOf(listaVendas.pega(i).getCpf()).equals(String.valueOf(cpfSel))) {
-                    dados.add(new Object[]{listaVendas.pega(i).getCodigo(),listaVendas.pega(i).getRegistroMS(),listaVendas.pega(i).getCpf(),listaVendas.pega(i).getData()});
+                else if (String.valueOf(listaVendas.get(i).getCpf()).equals(String.valueOf(cpfSel))) {
+                    dados.add(new Object[]{listaVendas.get(i).getCodigo(),listaVendas.get(i).getRegistroMS(),listaVendas.get(i).getCpf(),listaVendas.get(i).getData()});
                 }
                 i++;
-            } while (listaVendas.pega(i)!=null);
+            } while (listaVendas.get(i)!=null);
         } catch (IllegalArgumentException ex) {
         }
         ModeloTabela modelo = new ModeloTabela(dados, colunas);

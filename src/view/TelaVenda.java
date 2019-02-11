@@ -14,15 +14,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import modelBeans.Cliente;
 import modelBeans.Medicamento;
 import modelBeans.ModeloTabela;
 import modelBeans.Venda;
-import modelDao.ListaEncadeadaCliente;
-import modelDao.ListaEncadeadaMedicamento;
-import modelDao.ListaEncadeadaVenda;
+import modelDao.Operacoes;
 
 /**
  *
@@ -30,16 +29,17 @@ import modelDao.ListaEncadeadaVenda;
  */
 public class TelaVenda extends javax.swing.JFrame {
 
-    ListaEncadeadaCliente listaClientes = new ListaEncadeadaCliente();
-    ListaEncadeadaMedicamento listaMedicamentos = new ListaEncadeadaMedicamento();
+    LinkedList<Cliente> listaClientes = new LinkedList<>();
+    LinkedList<Medicamento> listaMedicamentos = new LinkedList<>();
     long cpfSel;
     int registroMSSel;
-    ListaEncadeadaVenda listaVendas = new ListaEncadeadaVenda();
+    LinkedList<Venda> listaVendas = new LinkedList<>();
     Venda nova = new Venda();
     SimpleDateFormat data;
     File arquivoMedicamento;
     File arquivoCliente;
     File arquivoVenda;
+    Operacoes op = new Operacoes();
     
     public TelaVenda() {
         this.data = new SimpleDateFormat("dd/MM/yyyy hh:mm");
@@ -252,26 +252,26 @@ public class TelaVenda extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane,"É preciso selecionar um Medicamento.");
         } else if ((Integer) jSpinnerQnt.getValue()<1) {
             JOptionPane.showMessageDialog(rootPane,"É preciso selecionar ao menos 1 item.");
-        } else if ((Integer) jSpinnerQnt.getValue()>listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().getQnt()) {
+        } else if ((Integer) jSpinnerQnt.getValue()>op.buscaRegistroMS(listaMedicamentos, registroMSSel).getQnt()) {
             JOptionPane.showMessageDialog(rootPane,"Quantidade Indisponível.");
         } else {
             int resposta = 0;
             resposta = JOptionPane.showConfirmDialog(rootPane,"Confirmar Venda?");
             if (resposta == JOptionPane.YES_OPTION) {
-                Integer aux[]=listaClientes.buscaCpf(cpfSel).getElemento().getCompras();
+                Integer aux[]=op.buscaCpf(listaClientes, cpfSel).getCompras();
                 for (int i=0; i<=aux.length; i++){
                     if (aux[i]==null) {
                         aux[i]=registroMSSel;
                         break;
                     }
                 }                
-                listaClientes.buscaCpf(cpfSel).getElemento().setCompras(aux);
-                listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().setQnt(listaMedicamentos.buscaRegistroMS(registroMSSel).getElemento().getQnt()-(Integer) jSpinnerQnt.getValue());
+                op.buscaCpf(listaClientes, cpfSel).setCompras(aux);
+                op.buscaRegistroMS(listaMedicamentos, registroMSSel).setQnt(op.buscaRegistroMS(listaMedicamentos, registroMSSel).getQnt()-(Integer) jSpinnerQnt.getValue());
                 nova.setData(data.format(new Date()));
                 nova.setCodigo(gerarCodigo());
                 nova.setCpf(cpfSel);;
                 nova.setRegistroMS(registroMSSel);
-                listaVendas.adiciona(nova);
+                listaVendas.add(nova);
                 JOptionPane.showMessageDialog(rootPane, "Venda realizada com sucesso.");
             }
         }
@@ -303,12 +303,12 @@ public class TelaVenda extends javax.swing.JFrame {
         
         try{
             do {
-                if (listaClientes.pega(i).getNome().contains(jTextFieldPesquisarCliente.getText().toLowerCase())) {
-                    dados.add(new Object[]{listaClientes.pega(i).getNome(),listaClientes.pega(i).getCpf()});
+                if (listaClientes.get(i).getNome().contains(jTextFieldPesquisarCliente.getText().toLowerCase())) {
+                    dados.add(new Object[]{listaClientes.get(i).getNome(),listaClientes.get(i).getCpf()});
                 }
                 i++;
-            } while (listaClientes.pega(i)!=null);
-        } catch (IllegalArgumentException ex) {
+            } while (listaClientes.get(i)!=null);
+        } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
         }
         ModeloTabela modelo = new ModeloTabela(dados, colunas);
         jTableClientes.setModel(modelo);
@@ -327,12 +327,12 @@ public class TelaVenda extends javax.swing.JFrame {
         
         try {
             do {
-                if (listaMedicamentos.pega(i).getNome().contains(jTextFieldPesquisarMedicamento.getText().toLowerCase())) {
-                    dados.add(new Object[]{listaMedicamentos.pega(i).getNome(),listaMedicamentos.pega(i).getRegistroMS()});
+                if (listaMedicamentos.get(i).getNome().contains(jTextFieldPesquisarMedicamento.getText().toLowerCase())) {
+                    dados.add(new Object[]{listaMedicamentos.get(i).getNome(),listaMedicamentos.get(i).getRegistroMS()});
                 }
                 i++;
-            } while (listaMedicamentos.pega(i)!=null);
-        } catch (IllegalArgumentException ex) {
+            } while (listaMedicamentos.get(i)!=null);
+        } catch (IllegalArgumentException | IndexOutOfBoundsException ex) {
         }
         ModeloTabela modelo = new ModeloTabela(dados, colunas);
         jTableMedicamentos.setModel(modelo);
@@ -349,7 +349,7 @@ public class TelaVenda extends javax.swing.JFrame {
     public int gerarCodigo () {
         int aux=1;
         while (true) {
-        if (listaVendas.contem(aux)){
+        if (op.contemVenda(listaVendas, aux)){
             aux++;
         } else {
             break;
@@ -361,15 +361,15 @@ public class TelaVenda extends javax.swing.JFrame {
     public boolean listaParaArquivoMedicamento() {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter (arquivoMedicamento));
-            for (int i = 0; i<listaMedicamentos.tamanho(); i++) {
-                bf.write(listaMedicamentos.pega(i).getNome()+";");
-                bf.write(listaMedicamentos.pega(i).getFabricante()+";");
-                bf.write(listaMedicamentos.pega(i).getVerificador()+";");
-                bf.write(listaMedicamentos.pega(i).getAcao()+";");
-                bf.write(listaMedicamentos.pega(i).getTipo()+";");
-                bf.write(listaMedicamentos.pega(i).getQnt()+";");
-                bf.write(listaMedicamentos.pega(i).getRegistroMS()+";");
-                bf.write(listaMedicamentos.pega(i).getPreco()+";");
+            for (int i = 0; i<listaMedicamentos.size(); i++) {
+                bf.write(listaMedicamentos.get(i).getNome()+";");
+                bf.write(listaMedicamentos.get(i).getFabricante()+";");
+                bf.write(listaMedicamentos.get(i).getVerificador()+";");
+                bf.write(listaMedicamentos.get(i).getAcao()+";");
+                bf.write(listaMedicamentos.get(i).getTipo()+";");
+                bf.write(listaMedicamentos.get(i).getQnt()+";");
+                bf.write(listaMedicamentos.get(i).getRegistroMS()+";");
+                bf.write(listaMedicamentos.get(i).getPreco()+";");
                 bf.write("\n");
             }
             bf.close();
@@ -397,7 +397,7 @@ public class TelaVenda extends javax.swing.JFrame {
                 aux.setQnt(Integer.parseInt(array[5]));
                 aux.setRegistroMS(Integer.parseInt(array[6]));
                 aux.setPreco(Double.parseDouble(array[7]));
-                listaMedicamentos.adiciona(aux);
+                listaMedicamentos.add(aux);
             }
             return true;
         } catch (IOException ex) {
@@ -409,13 +409,13 @@ public class TelaVenda extends javax.swing.JFrame {
     public boolean listaParaArquivoCliente () {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter (arquivoCliente));
-            for (int i = 0; i<listaClientes.tamanho(); i++) {
-                bf.write(listaClientes.pega(i).getNome()+";");
-                bf.write(listaClientes.pega(i).getCpf()+";");
-                bf.write(listaClientes.pega(i).getEndereco()+";");
-                bf.write(listaClientes.pega(i).getTelefone()+";");
-                bf.write(listaClientes.pega(i).getIdade()+";");
-                Integer aux[] = listaClientes.pega(i).getCompras();
+            for (int i = 0; i<listaClientes.size(); i++) {
+                bf.write(listaClientes.get(i).getNome()+";");
+                bf.write(listaClientes.get(i).getCpf()+";");
+                bf.write(listaClientes.get(i).getEndereco()+";");
+                bf.write(listaClientes.get(i).getTelefone()+";");
+                bf.write(listaClientes.get(i).getIdade()+";");
+                Integer aux[] = listaClientes.get(i).getCompras();
                 for (int j=0; j<aux.length; j++) {
                     bf.write(aux[j]+";");
                 }
@@ -451,7 +451,7 @@ public class TelaVenda extends javax.swing.JFrame {
                     compras[i] = Integer.parseInt(array[i+5]);
                 }
                 aux.setCompras(compras);
-                listaClientes.adiciona(aux);
+                listaClientes.add(aux);
             }
             return true;
         } catch (IOException ex) {
@@ -463,11 +463,11 @@ public class TelaVenda extends javax.swing.JFrame {
     public boolean listaParaArquivoVenda () {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter (arquivoVenda));
-            for (int i = 0; i<listaVendas.tamanho(); i++) {
-                bf.write(listaVendas.pega(i).getData()+";");
-                bf.write(listaVendas.pega(i).getCpf()+";");
-                bf.write(listaVendas.pega(i).getRegistroMS()+";");
-                bf.write(listaVendas.pega(i).getCodigo()+";");
+            for (int i = 0; i<listaVendas.size(); i++) {
+                bf.write(listaVendas.get(i).getData()+";");
+                bf.write(listaVendas.get(i).getCpf()+";");
+                bf.write(listaVendas.get(i).getRegistroMS()+";");
+                bf.write(listaVendas.get(i).getCodigo()+";");
                 bf.write("\n");
             }
             bf.close();
@@ -491,7 +491,7 @@ public class TelaVenda extends javax.swing.JFrame {
                 aux.setCpf(Long.parseLong(array[1]));
                 aux.setRegistroMS(Integer.parseInt(array[2]));
                 aux.setCodigo(Integer.parseInt(array[3]));
-                listaVendas.adiciona(aux);
+                listaVendas.add(aux);
             }
             return true;
         } catch (IOException ex) {
@@ -499,6 +499,8 @@ public class TelaVenda extends javax.swing.JFrame {
             return false;
         }
     }
+    
+   
     
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
